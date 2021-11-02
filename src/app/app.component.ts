@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, NavigationEnd, NavigationStart, RouteConfigLoadStart, RouteConfigLoadEnd} from '@angular/router';
+import {SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ export class AppComponent implements OnInit {
   showNavbar = true;
   showFooter = true;
   isLoading: boolean;
+  avatar: SafeResourceUrl;
 
   constructor(private router: Router) {
 

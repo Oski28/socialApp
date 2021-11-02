@@ -27,6 +27,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { TermsComponent } from './components/terms/terms.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ProfileComponent } from './components/profil/profile.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     SignupComponent,
     TermsComponent,
     SigninComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,7 @@ import {TermsComponent} from './components/terms/terms.component';
 import {SigninComponent} from './components/signin/signin.component';
 import {NotFoundComponent} from './components/not-found/not-found.component';
 import {AuthGuard} from './service/auth.guard';
+import {ProfileComponent} from './components/profil/profile.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: 'signup/:confirm', component: SignupComponent},
   {path: 'terms', component: TermsComponent},
   {path: 'signin', component: SigninComponent},
+  {path: 'profil', component: ProfileComponent},
   {path: 'signin/:guard', component: SigninComponent},
   {path: '**', component: NotFoundComponent},
   {path: 'basic-ui', loadChildren: () => import('./basic-ui/basic-ui.module').then(m => m.BasicUiModule)},

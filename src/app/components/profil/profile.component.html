@@ -1,0 +1,255 @@
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-danger text-center" *ngIf="error !== ''">
+          Błąd: {{error}}
+        </div>
+        <div class="alert alert-info text-center">
+          Uwaga! W przypadku zmiany hasła lub danych użytkownika nastąpi wylogowanie użytkownika
+        </div>
+        <h4 class="card-title">Profil użytkownika</h4>
+        <div class="d-flex">
+          <div class="d-flex align-items-center mr-4 text-muted font-weight-light">
+            <i class="mdi mdi-account-outline icon-sm mr-2"></i>
+            <span>{{firstname}} {{lastname}}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-lg-6 pr-1 mb-1">
+            <img [src]="avatar" class="mb-2 mw-100 w-100 rounded" alt="image"
+                 style="width:100% !important;  max-height:400px !important; max-width:400px !important;">
+          </div>
+          <div class="col-lg-6 pr-1">
+            <div class="card">
+              <div class="card-body" style="padding: 0;">
+                <h4 class="card-title">Dane użytkownika</h4>
+                <table class="table mb-0">
+                  <tbody>
+                  <tr>
+                    <td class="pl-0">Imie</td>
+                    <td class="text-right">
+                      {{firstname}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Nazwisko</td>
+                    <td class="text-right">
+                      {{lastname}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Email</td>
+                    <td class="text-right">
+                      {{email}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Nazwa użytkownika</td>
+                    <td class="text-right">
+                      {{username}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Data urodzenia</td>
+                    <td class="text-right">
+                      {{dateOfBirth}}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-lg-6 pr-1 grid-margin stretch-card mb-0 bg-gradient-secondary">
+            <form class="pt-3" [formGroup]="formAvatar" (ngSubmit)="onSubmitAvatar()">
+              <div class="form-group">
+                <label for="avatar">Avatar</label>
+                <input
+                  #img
+                  type="file"
+                  class="form-control form-control-file form-control-lg"
+                  id="avatar"
+                  formControlName="avatar"
+                  name="avatar"
+                  (change)="change(img)"
+                  [ngClass]="{ 'is-invalid': submittedAvatar && fAvatar.avatar.errors }"
+                />
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fAvatar.avatar.errors && submittedAvatar">
+                  <div *ngIf="fAvatar.avatar.errors.image">Obraz musi mieć rozdzielczość min 200x200 a max 600x600.
+                  </div>
+                  <div *ngIf="fAvatar.avatar.errors.extension">Dozowolone formaty obrazu: jpeg, png, jpg.</div>
+                  <div *ngIf="fAvatar.avatar.errors.fileSize">Obraz może mieć max 15MB.</div>
+                  <div *ngIf="fAvatar.avatar.errors.file">Można załączyć tylko jeden plik</div>
+                </div>
+              </div>
+              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                <button class="btn btn-success btn-block mb-2">Zmień avatar</button>
+              </div>
+            </form>
+          </div>
+          <div class="col-lg-6 pr-1 bg-gradient-secondary">
+            <form class="pt-3" [formGroup]="formData" (ngSubmit)="onSubmitData()">
+              <div class="form-group">
+                <label for="firstname">Imie</label>
+                <input type="text" class="form-control form-control-lg" id="firstname" formControlName="firstname"
+                       name="firstname" [ngClass]="{ 'is-invalid': submittedData && fData.firstname.errors }"
+                       placeholder="Podaj imie">
+                <div class="invalid-feedback text-center text-white bg-info"
+                     *ngIf="fData.firstname.errors && submittedData">
+                  <div *ngIf="fData.firstname.errors.required">Imię jest wymagane</div>
+                  <div *ngIf="fData.firstname.errors.minlength">
+                    Imię musi mieć co najmniej 3 znaki
+                  </div>
+                  <div *ngIf="fData.firstname.errors.maxlength">
+                    Imię musi mieć maksymalnie 50 znaków
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="lastname">Nazwisko</label>
+                <input type="text" class="form-control form-control-lg" id="lastname" formControlName="lastname"
+                       name="lastname" [ngClass]="{ 'is-invalid': submittedData && fData.lastname.errors }"
+                       placeholder="Podaj nazwisko">
+                <div class="invalid-feedback text-center text-white bg-info"
+                     *ngIf="fData.lastname.errors && submittedData">
+                  <div *ngIf="fData.lastname.errors.required">Nazwisko jest wymagane</div>
+                  <div *ngIf="fData.lastname.errors.minlength">
+                    Nazwisko musi mieć co najmniej 3 znaki
+                  </div>
+                  <div *ngIf="fData.lastname.errors.maxlength">
+                    Nazwisko musi mieć maksymalnie 50 znaków
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control form-control-lg" id="email" formControlName="email"
+                       name="email" [ngClass]="{ 'is-invalid': submittedData && fData.email.errors }"
+                       placeholder="Podaj email"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fData.email.errors && submittedData">
+                  <div *ngIf="fData.email.errors.required">Email jest wymagany</div>
+                  <div *ngIf="fData.email.errors.email">
+                    Email musi być poprawnym adresem email
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="username">Nazwa użytkownika</label>
+                <input type="text" class="form-control form-control-lg" id="username" formControlName="username"
+                       name="username" [ngClass]="{ 'is-invalid': submittedData && fData.username.errors }"
+                       placeholder="Podaj nazwe użytkownika"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fData.username.errors && submittedData">
+                  <div *ngIf="fData.username.errors.required">Nazwa użytkownika jest wymagana</div>
+                  <div *ngIf="fData.username.errors.minlength">
+                    Nazwa użytkownika musi mieć co najmniej 3 znaki
+                  </div>
+                  <div *ngIf="fData.username.errors.maxlength">
+                    Nazwa użytkownika musi mieć maksymalnie 50 znaków
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="dateOfBirth">Data urodzenia</label>
+                <input type="date" class="form-control form-control-lg" id="dateOfBirth"
+                       formControlName="dateOfBirth"
+                       name="dateOfBirth"
+                       [ngClass]="{ 'is-invalid': submittedData && fData.dateOfBirth.errors }" required/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fData.dateOfBirth.errors && submittedData">
+                  <div *ngIf="fData.dateOfBirth.errors.required">Data urodzenia jest wymagana</div>
+                  <div *ngIf="fData.dateOfBirth.errors.dateRange">Użytkownik powinien mieć ukończone 12 lat i
+                    nieprzekraczać
+                    101 lat
+                  </div>
+                </div>
+              </div>
+              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                <button class="btn btn-success btn-block mb-2">Zmień dane</button>
+              </div>
+            </form>
+          </div>
+          <div class="col-lg-6 pr-1 bg-gradient-secondary" style="margin: 0 auto;">
+            <form class="pt-3" [formGroup]="formPassword" (ngSubmit)="onSubmitPassword()">
+              <div class="form-group">
+                <label for="oldPassword">Stare hasło</label>
+                <input type="password" class="form-control form-control-lg" id="oldPassword"
+                       formControlName="oldPassword"
+                       name="oldPassword"
+                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.oldPassword.errors }"
+                       placeholder="Podaj hasło"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fPassword.oldPassword.errors && submittedPassword">
+                  <div *ngIf="fPassword.oldPassword.errors.required">Hasło jest wymagane</div>
+                  <div *ngIf="fPassword.oldPassword.errors.minlength">
+                    Hasło musi mieć co najmniej 6 znaków
+                  </div>
+                  <div *ngIf="fPassword.oldPassword.errors.pattern">
+                    Hasło musi się składać z przynajmniej: 1 wielkiej litery, 1 małej litery, 1 cyfry
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="newPassword">Nowe hasło</label>
+                <input type="password" class="form-control form-control-lg" id="newPassword"
+                       formControlName="newPassword"
+                       name="newPassword"
+                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.newPassword.errors }"
+                       placeholder="Podaj hasło"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fPassword.newPassword.errors && submittedPassword">
+                  <div *ngIf="fPassword.newPassword.errors.required">Hasło jest wymagane</div>
+                  <div *ngIf="fPassword.newPassword.errors.minlength">
+                    Hasło musi mieć co najmniej 6 znaków
+                  </div>
+                  <div *ngIf="fPassword.newPassword.errors.pattern">
+                    Hasło musi się składać z przynajmniej: 1 wielkiej litery, 1 małej litery, 1 cyfry
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="confirmPassword">Potwierdzenie hasła</label>
+                <input type="password" class="form-control form-control-lg" id="confirmPassword"
+                       formControlName="confirmPassword"
+                       name="confirmPassword"
+                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.confirmPassword.errors }"
+                       placeholder="Potwierdź hasło"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fPassword.confirmPassword.errors && submittedPassword">
+                  <div *ngIf="fPassword.confirmPassword.errors.required">Potwierdzenie hasła jest wymagane</div>
+                  <div *ngIf="fPassword.confirmPassword.errors.matching">
+                    Podane hasła nie zgadzają się
+                  </div>
+                </div>
+              </div>
+              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                <button class="btn btn-success btn-block mb-2">Zmień hasło</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+            <button
+              type="button"
+              (click)="onReset()"
+              class="btn btn-warning btn-block"
+            >
+              Zresetuj
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

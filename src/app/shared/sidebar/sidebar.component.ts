@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from '../../service/token-storage.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {AuthService} from '../../service/auth.service';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {UserService} from '../../service/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,14 +14,29 @@ export class SidebarComponent implements OnInit {
   public uiBasicCollapsed = false;
   public samplePagesCollapsed = false;
   public isUser: boolean;
+  public user;
+  avatar: SafeResourceUrl;
 
-  constructor(private tokenService: TokenStorageService, private router: Router) {
+  constructor(private tokenService: TokenStorageService, private router: Router,
+              private sanitizer: DomSanitizer, private userService: UserService) {
   }
 
   ngOnInit() {
     this.router.events.subscribe((evt) => {
       if ((evt instanceof NavigationEnd)) {
         this.isUser = this.tokenService.isLoggedIn();
+        this.user = this.tokenService.getUser();
+        this.userService.getAvatar(this.tokenService.getUser().id).subscribe(
+          data => {
+            if (data.avatar !== null) {
+              this.avatar = this.sanitizer
+                .bypassSecurityTrustResourceUrl('' + data.avatar.substr(0, data.avatar.indexOf(',') + 1)
+                  + data.avatar.substr(data.avatar.indexOf(',') + 1));
+            } else {
+              this.avatar = 'assets\\images\\usericon.png';
+            }
+          }
+        )
       }
     });
 

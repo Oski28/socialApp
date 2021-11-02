@@ -67,8 +67,10 @@ export class SigninComponent implements OnInit {
       err => {
         if (err.error.message === 'Bad credentials') {
           this.errorMessage = 'Niepoprawne dane uwierzytelniające';
+        } else if (err.error.message === 'User is disabled') {
+          this.errorMessage = 'Użytkownik zablokowany';
         } else {
-          this.errorMessage = err.error.message;
+          this.errorMessage = 'Błąd serwera';
         }
         console.log(this.errorMessage);
         this.isLoginFailed = true;

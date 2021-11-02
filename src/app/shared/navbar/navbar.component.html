@@ -12,7 +12,7 @@
       <li class="nav-item nav-profile dropdown" ngbDropdown *ngIf="isUser">
         <a class="nav-link dropdown-toggle" id="profileDropdown" ngbDropdownToggle>
           <div class="nav-profile-img">
-            <img src="assets/images/faces/face1.jpg" alt="image">
+            <img [src]="avatar" alt="image">
             <span class="availability-status online"></span>
           </div>
           <div class="nav-profile-text">
@@ -20,13 +20,13 @@
           </div>
         </a>
         <div class="dropdown-menu navbar-dropdown" ngbDropdownMenu aria-labelledby="profileDropdown">
-          <a class="dropdown-item" href="javascript:;">
-            <i class="mdi mdi-cached mr-2 text-success"></i>
+          <a class="dropdown-item" href="javascript:;" href="/profil" routerLink="/profil">
+            <i class="mdi mdi-account-settings mr-2 text-dark"></i>
             Twój profil
           </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="javascript:;" (click)="logout()">
-            <i class="mdi mdi-logout mr-2 text-primary"></i>
+            <i class="mdi mdi-logout mr-2 text-dark"></i>
             Wyloguj
           </a>
         </div>

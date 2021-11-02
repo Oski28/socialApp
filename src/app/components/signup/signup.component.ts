@@ -4,7 +4,6 @@ import {AuthService} from '../../service/auth.service';
 import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import ValidationService from '../../service/validation.service';
 import {ActivatedRoute, Params} from '@angular/router';
-import {dateValidator} from '@rxweb/reactive-form-validators/reactive-form-validators';
 
 @Component({
   selector: 'app-signup',
@@ -84,7 +83,6 @@ export class SignupComponent implements OnInit {
     this.submitted = false;
     this.form.reset();
     this.imgInput.nativeElement.value = '';
-    this.submitted = false;
     this.confirm = null;
   }
 
