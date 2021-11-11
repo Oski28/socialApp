@@ -28,6 +28,10 @@ import { TermsComponent } from './components/terms/terms.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ProfileComponent } from './components/profil/profile.component';
+import { FindUserComponent } from './components/find-user/find-user.component';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { UserShowComponent } from './components/user-show/user-show.component';
+import { CreateUserComponent } from './components/create-user/create-user.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +51,10 @@ import { ProfileComponent } from './components/profil/profile.component';
     TermsComponent,
     SigninComponent,
     NotFoundComponent,
-    ProfileComponent
+    ProfileComponent,
+    FindUserComponent,
+    UserShowComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +65,8 @@ import { ProfileComponent } from './components/profil/profile.component';
     ReactiveFormsModule,
     ChartsModule,
     HttpClientModule,
-    RxReactiveFormsModule
+    RxReactiveFormsModule,
+    NgxPaginationModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}, DatePipe, ThemeService],
   bootstrap: [AppComponent]

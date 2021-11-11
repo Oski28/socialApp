@@ -1,5 +1,5 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar" *ngIf="isUser">
-  <ul class="nav">
+  <ul class="nav" *ngIf="isUser">
     <li class="nav-item nav-profile">
       <a href="javascript:;" class="nav-link">
         <div class="nav-profile-image">
@@ -16,7 +16,19 @@
     <li class="nav-item" [ngClass]="{ 'active': dashboard.isActive }">
       <a class="nav-link" routerLink="/dashboard" routerLinkActive #dashboard="routerLinkActive">
         <span class="menu-title">Dashboard</span>
-        <i class="mdi mdi-home menu-icon"></i>
+        <i class="mdi mdi-home menu-icon "></i>
+      </a>
+    </li>
+    <li class="nav-item" [ngClass]="{ 'active': findUsers.isActive }" *ngIf="isMod">
+      <a class="nav-link" routerLink="/findUser" routerLinkActive #findUsers="routerLinkActive">
+        <span class="menu-title">Szukaj użytkowników</span>
+        <i class="mdi mdi-account-search menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item" [ngClass]="{ 'active': createUser.isActive }" *ngIf="isAdmin">
+      <a class="nav-link" routerLink="/addUser" routerLinkActive #createUser="routerLinkActive">
+        <span class="menu-title">Dodaj użytkownika</span>
+        <i class="mdi mdi mdi-account-plus menu-icon"></i>
       </a>
     </li>
     <li class="nav-item"

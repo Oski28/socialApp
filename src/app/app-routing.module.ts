@@ -10,6 +10,9 @@ import {SigninComponent} from './components/signin/signin.component';
 import {NotFoundComponent} from './components/not-found/not-found.component';
 import {AuthGuard} from './service/auth.guard';
 import {ProfileComponent} from './components/profil/profile.component';
+import {FindUserComponent} from './components/find-user/find-user.component';
+import {UserShowComponent} from './components/user-show/user-show.component';
+import {CreateUserComponent} from './components/create-user/create-user.component';
 
 
 const routes: Routes = [
@@ -24,6 +27,9 @@ const routes: Routes = [
   {path: 'signin', component: SigninComponent},
   {path: 'profil', component: ProfileComponent},
   {path: 'signin/:guard', component: SigninComponent},
+  {path: 'userShow/:id', component: UserShowComponent},
+  {path: 'findUser', component: FindUserComponent},
+  {path: 'addUser', component: CreateUserComponent},
   {path: '**', component: NotFoundComponent},
   {path: 'basic-ui', loadChildren: () => import('./basic-ui/basic-ui.module').then(m => m.BasicUiModule)},
   {path: 'charts', loadChildren: () => import('./charts/charts.module').then(m => m.ChartsDemoModule)},

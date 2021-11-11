@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {NgbDropdownConfig} from '@ng-bootstrap/ng-bootstrap';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {NgbDropdownConfig, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TokenStorageService} from '../../service/token-storage.service';
 import {AuthService} from '../../service/auth.service';
 import {NavigationEnd, Router} from '@angular/router';
@@ -12,46 +12,49 @@ import {UserService} from '../../service/user.service';
   styleUrls: ['./navbar.component.scss'],
   providers: [NgbDropdownConfig]
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements AfterViewInit {
   public iconOnlyToggled = false;
   public sidebarToggled = false;
-  public isUser: boolean;
+  @Input() isUser: boolean;
   public username: string;
   avatar: SafeResourceUrl;
 
   constructor(config: NgbDropdownConfig, private tokenService: TokenStorageService,
               private authService: AuthService, private router: Router, private sanitizer: DomSanitizer,
-              private userService: UserService) {
+              private userService: UserService, private modalService: NgbModal) {
     config.placement = 'bottom-right';
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.router.events.subscribe((evt) => {
-      if (!(evt instanceof NavigationEnd)) {
-        return;
-      }
-      this.isUser = this.tokenService.isLoggedIn();
-      this.username = this.tokenService.getUser().username;
-      this.userService.getAvatar(this.tokenService.getUser().id).subscribe(
-        data => {
-          if (data.avatar !== null) {
-            this.avatar = this.sanitizer
-              .bypassSecurityTrustResourceUrl('' + data.avatar.substr(0, data.avatar.indexOf(',') + 1)
-                + data.avatar.substr(data.avatar.indexOf(',') + 1));
-          } else {
-            this.avatar = 'assets\\images\\usericon.png';
-          }
+        if (!(evt instanceof NavigationEnd)) {
+          return;
         }
-      )
-    });
+        this.isUser = this.tokenService.isLoggedIn();
+        this.username = this.tokenService.getUser().username;
+        if (this.isUser) {
+          this.userService.getAvatar(this.tokenService.getUser().id).subscribe(
+            data => {
+              if (data.avatar !== null) {
+                this.avatar = this.sanitizer
+                  .bypassSecurityTrustResourceUrl('' + data.avatar.substr(0, data.avatar.indexOf(',') + 1)
+                    + data.avatar.substr(data.avatar.indexOf(',') + 1));
+              } else {
+                this.avatar = 'assets\\images\\usericon.png';
+              }
+            }
+          )
+        }
+      }
+    );
   }
 
-  // toggle sidebar in small devices
+// toggle sidebar in small devices
   toggleOffcanvas() {
     document.querySelector('.sidebar-offcanvas').classList.toggle('active');
   }
 
-  // toggle sidebar
+// toggle sidebar
   toggleSidebar() {
     let body = document.querySelector('body');
     if ((!body.classList.contains('sidebar-toggle-display')) && (!body.classList.contains('sidebar-absolute'))) {
@@ -88,9 +91,17 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['']);
   }
 
-  // toggle right sidebar
-  // toggleRightSidebar() {
-  //   document.querySelector('#right-sidebar').classList.toggle('open');
-  // }
+// toggle right sidebar
+// toggleRightSidebar() {
+//   document.querySelector('#right-sidebar').classList.toggle('open');
+// }
 
+  removeAccount() {
+    this.userService.removeUser(this.tokenService.getUser().id).subscribe();
+    this.logout();
+  }
+
+  openModal(removeModalContent) {
+    this.modalService.open(removeModalContent);
+  }
 }

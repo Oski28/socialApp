@@ -23,7 +23,7 @@ export class SigninComponent implements OnInit {
   username = '';
 
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService,
-              private activatedRoute: ActivatedRoute, private router: Router, private route: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -45,9 +45,9 @@ export class SigninComponent implements OnInit {
           }
         );
       }
-      // tslint:disable-next-line:no-shadowed-variable
-      this.route.params.subscribe((params: Params) => this.guard = params.guard);
     })
+    // tslint:disable-next-line:no-shadowed-variable
+    this.activatedRoute.params.subscribe((params: Params) => this.guard = params.guard);
   }
 
   onSubmit(): void {
@@ -62,7 +62,10 @@ export class SigninComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['dashboard'])
+        /*.then(() => {
+        window.location.reload()
+      })*/;
       },
       err => {
         if (err.error.message === 'Bad credentials') {
@@ -72,13 +75,8 @@ export class SigninComponent implements OnInit {
         } else {
           this.errorMessage = 'Błąd serwera';
         }
-        console.log(this.errorMessage);
         this.isLoginFailed = true;
       }
     );
-  }
-
-  reloadPage(): void {
-    window.location.reload();
   }
 }

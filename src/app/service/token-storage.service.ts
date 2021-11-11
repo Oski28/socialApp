@@ -33,6 +33,14 @@ export class TokenStorageService {
     return !!this.getJwtToken();
   }
 
+  isMod(){
+    return this.getUser().roles.includes('ROLE_MODERATOR');
+  }
+
+  isAdmin(){
+    return this.getUser().roles.includes('ROLE_ADMIN');
+  }
+
   getJwtToken(): string | null {
     return window.sessionStorage.getItem(JWT_TOKEN);
   }

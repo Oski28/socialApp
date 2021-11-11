@@ -26,6 +26,8 @@ export class ProfileComponent implements OnInit {
   lastname: string;
   email: string;
   dateOfBirth: string;
+  roles: [];
+  addDate = '';
 
   formAvatar!: FormGroup;
   submittedAvatar = false;
@@ -60,6 +62,8 @@ export class ProfileComponent implements OnInit {
         this.username = data.username;
         this.email = data.email;
         this.dateOfBirth = data.dateOfBirth;
+        this.roles = data.roles;
+        this.addDate = data.addDate;
       }
     );
 
@@ -103,7 +107,6 @@ export class ProfileComponent implements OnInit {
           window.location.reload();
         },
         error => {
-          console.log(error)
           this.error = error.error.message;
           this.onReset();
           this.ngOnInit();
@@ -127,11 +130,9 @@ export class ProfileComponent implements OnInit {
           this.logout();
         },
         error => {
-          console.log(error);
           this.onReset();
           this.ngOnInit();
           this.error = error.error.message;
-          window.scrollTo(0, 0);
         }
       );
     }
@@ -150,11 +151,9 @@ export class ProfileComponent implements OnInit {
           this.logout();
         },
         error => {
-          console.log(error);
           this.onReset();
           this.ngOnInit();
           this.error = error.error.message;
-          window.scrollTo(0, 0);
         }
       );
     }

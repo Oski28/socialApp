@@ -115,11 +115,11 @@ $sidebar-bg: $white;
 $sidebar-menu-color: #3e4b5b;
 $sidebar-submenu-color: #888;
 $sidebar-menu-active-bg: $white;
-$sidebar-menu-active-color: theme-color(primary);
+$sidebar-menu-active-color: theme-color(info);
 $sidebar-menu-hover-bg: darken($sidebar-bg, 1%);
 $sidebar-menu-hover-color: darken($sidebar-menu-color, 10%);
 $sidebar-submenu-hover-color: darken($sidebar-submenu-color, 20%);
-$sidebar-menu-icon-color: #bba8bff5;
+$sidebar-menu-icon-color: $black;
 $sidebar-menu-arrow-color: #9e9da0;
 $sidebar-menu-border-color: #f2edf3;
 

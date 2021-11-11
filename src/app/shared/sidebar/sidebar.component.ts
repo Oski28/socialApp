@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {TokenStorageService} from '../../service/token-storage.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {AuthService} from '../../service/auth.service';
@@ -10,10 +10,12 @@ import {UserService} from '../../service/user.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements AfterViewInit {
   public uiBasicCollapsed = false;
   public samplePagesCollapsed = false;
-  public isUser: boolean;
+  @Input() isUser: boolean;
+  public isMod: boolean;
+  public isAdmin: boolean;
   public user;
   avatar: SafeResourceUrl;
 
@@ -21,11 +23,16 @@ export class SidebarComponent implements OnInit {
               private sanitizer: DomSanitizer, private userService: UserService) {
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.router.events.subscribe((evt) => {
-      if ((evt instanceof NavigationEnd)) {
-        this.isUser = this.tokenService.isLoggedIn();
+      if (!(evt instanceof NavigationEnd)) {
+        return;
+      }
+      this.isUser = this.tokenService.isLoggedIn();
+      if (this.isUser) {
         this.user = this.tokenService.getUser();
+        this.isMod = this.tokenService.isMod();
+        this.isAdmin = this.tokenService.isAdmin();
         this.userService.getAvatar(this.tokenService.getUser().id).subscribe(
           data => {
             if (data.avatar !== null) {
@@ -39,7 +46,6 @@ export class SidebarComponent implements OnInit {
         )
       }
     });
-
 
     const body = document.querySelector('body');
 

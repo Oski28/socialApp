@@ -56,6 +56,18 @@
                       {{dateOfBirth}}
                     </td>
                   </tr>
+                  <tr>
+                    <td class="pl-0">W serwisie od</td>
+                    <td class="text-right">
+                      {{addDate.substr(0, 10)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Uprawnienia</td>
+                    <td class="text-left">
+                      <li *ngFor="let role of roles">{{role.role.substr(5)}}</li>
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </div>

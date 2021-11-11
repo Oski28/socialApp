@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, NavigationEnd, NavigationStart, RouteConfigLoadStart, RouteConfigLoadEnd} from '@angular/router';
 import {SafeResourceUrl} from '@angular/platform-browser';
+import {TokenStorageService} from './service/token-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +15,15 @@ export class AppComponent implements OnInit {
   showNavbar = true;
   showFooter = true;
   isLoading: boolean;
+  isUser = false;
   avatar: SafeResourceUrl;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private tokenService: TokenStorageService) {
 
     // Removing Sidebar, Navbar, Footer for Special Pages
     router.events.forEach((event) => {
       if (event instanceof NavigationStart) {
+        this.isUser = this.tokenService.isLoggedIn();
         if ((event.url === '/error-pages/404') || (event.url === '/error-pages/500')) {
           document.querySelector('.main-panel').classList.add('w-100');
           document.querySelector('.page-body-wrapper').classList.add('full-page-wrapper');

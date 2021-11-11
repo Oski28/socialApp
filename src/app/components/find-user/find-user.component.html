@@ -1,0 +1,118 @@
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <form class="d-flex bg-dark mb-4" action="#">
+        <div class="input-group">
+          <div class="input-group-prepend bg-transparent">
+            <i class="input-group-text border-0 mdi mdi-magnify"></i>
+          </div>
+          <input type="text" class="form-control bg-transparent border-0 text-white"
+                 placeholder="Szukaj użytkowników" (input)="changeInput($event.target.value)">
+        </div>
+      </form>
+      <form class="form-sample">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="pageSize">Ilość elementów</label>
+              <div class="col-lg-12">
+                <select (change)="changeSize($event.target.value)" class="form-control" id="pageSize">
+                  <option>5</option>
+                  <option>10</option>
+                  <option selected="selected">20</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="column">Kolumna sortowania</label>
+              <div class="col-lg-12">
+                <select (change)="changeColumn($event.target.value)" class="form-control" id="column">
+                  <option selected="selected">Data utworzenia konta</option>
+                  <option>Imie</option>
+                  <option>Nazwisko</option>
+                  <option>Nazwa użytkownika</option>
+                  <option>Email</option>
+                  <option>Data urodzenia</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="direction">Kierunek
+                sortowania</label>
+              <div class="col-lg-12">
+                <select class="form-control" id="direction" (change)="changeDirection($event.target.value)">
+                  <option selected="selected">Rosnąco</option>
+                  <option>Malejąco</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <h4 class="card-title">Użytkownicy</h4>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>
+              Avatar
+            </th>
+            <th>
+              Imie
+            </th>
+            <th>
+              Nazwisko
+            </th>
+            <th>
+              Nazwa użytkownika
+            </th>
+            <th>
+              Email
+            </th>
+            <th>
+              Data urodzenia
+            </th>
+            <th>
+
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of users">
+            <td class="py-1">
+              <img [src]="user.avatar" alt="image"/>
+            </td>
+            <td>
+              {{user.firstname}}
+            </td>
+            <td>
+              {{user.lastname}}
+            </td>
+            <td>
+              {{user.username}}
+            </td>
+            <td>
+              {{user.email}}
+            </td>
+            <td>
+              {{user.dateOfBirth}}
+            </td>
+            <td>
+              <a routerLink="/userShow/{{user.id}}" style="color: orangered">Przejdź do profilu</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-body">
+      <ngb-pagination (pageChange)="loadPage($event)" [collectionSize]="totalElements" [pageSize]="pageSize"
+                      [page]="currentPage+1" aria-label="user pagination"
+                      class="d-flex justify-content-center pagination-success"></ngb-pagination>
+    </div>
+  </div>
+</div>

@@ -18,7 +18,19 @@ export class UserService {
     return this.http.get(API.concat(userId.toString()), httpOptionsJson);
   }
 
+  getAll(column: string = 'id', direction: string = 'ASC', filter: string = '', page: string = '0',
+         size: string = '5') {
+    const httpOptions = {
+      headers: {'Content-Type': 'application/json'},
+      params: {column, direction, filter, page, size}
+    };
+    return this.http.get(API, httpOptions);
+  }
+
   getAvatar(userId: number): Observable<any> {
+    if (userId === undefined) {
+      userId = 0;
+    }
     return this.http.get(API.concat(userId.toString()).concat('/avatar'), httpOptionsJson);
   }
 
@@ -41,5 +53,69 @@ export class UserService {
   updatePassword(oldPassword: string, newPassword: string, id: number): Observable<any> {
     return this.http.patch(API.concat(id.toString()).concat('/password'),
       {oldPassword, newPassword}, httpOptionsJson);
+  }
+
+  removeUser(userId: number): Observable<any> {
+    return this.http.delete(API.concat(userId.toString()), httpOptionsJson);
+  }
+
+  ban(date: Date, id: number): Observable<any> {
+    const banExpirationDate = this.datePipe.transform(date, 'yyyy-MM-dd');
+    return this.http.patch(API.concat(id.toString()).concat('/ban'), {banExpirationDate}, httpOptionsJson);
+  }
+
+  unban(id: number): Observable<any> {
+    return this.http.patch(API.concat(id.toString()).concat('/unban'), {id}, httpOptionsJson);
+  }
+
+  updateRole(role: string, id: number): Observable<any> {
+    const roles = [];
+    switch (role) {
+      default:
+      case 'USER':
+        roles.push(role);
+        break;
+      case 'MODERATOR':
+        roles.push(role);
+        roles.push('USER');
+        break;
+      case 'ADMIN':
+        roles.push(role);
+        roles.push('USER');
+        roles.push('MODERATOR');
+        break;
+    }
+    return this.http.patch(API.concat(id.toString()).concat('/role'), {roles}, httpOptionsJson);
+  }
+
+  create(avatar: string, firstname: string, lastname: string, username: string, email: string, password: string,
+         date: Date, role: string): Observable<any> {
+    const dateOfBirth = this.datePipe.transform(date, 'yyyy-MM-dd');
+    const roles = [];
+    switch (role) {
+      default:
+      case 'USER':
+        roles.push(role);
+        break;
+      case 'MODERATOR':
+        roles.push(role);
+        roles.push('USER');
+        break;
+      case 'ADMIN':
+        roles.push(role);
+        roles.push('USER');
+        roles.push('MODERATOR');
+        break;
+    }
+    return this.http.post(API, {
+      firstname,
+      lastname,
+      username,
+      email,
+      password,
+      dateOfBirth,
+      avatar,
+      roles
+    }, httpOptionsJson);
   }
 }

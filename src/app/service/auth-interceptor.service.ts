@@ -53,7 +53,6 @@ export class AuthInterceptorService implements HttpInterceptor {
           // tslint:disable-next-line:no-shadowed-variable
           switchMap((token: any) => {
             this.isRefreshing = false;
-
             this.tokenStorageService.saveJwtToken(token.accessToken);
             this.refreshTokenSubject.next(token.accessToken);
 
@@ -61,7 +60,6 @@ export class AuthInterceptorService implements HttpInterceptor {
           }),
           catchError((err) => {
             this.isRefreshing = false;
-
             this.tokenStorageService.signOut();
             return throwError(err);
           })
