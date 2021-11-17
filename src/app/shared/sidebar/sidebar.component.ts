@@ -11,7 +11,8 @@ import {UserService} from '../../service/user.service';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements AfterViewInit {
-  public uiBasicCollapsed = false;
+  public categoriesCollapsed = false;
+  public eventsCollapsed = false;
   public samplePagesCollapsed = false;
   @Input() isUser: boolean;
   public isMod: boolean;

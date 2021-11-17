@@ -16,6 +16,7 @@ export class NavbarComponent implements AfterViewInit {
   public iconOnlyToggled = false;
   public sidebarToggled = false;
   @Input() isUser: boolean;
+  public isMod: boolean;
   public username: string;
   avatar: SafeResourceUrl;
 
@@ -33,6 +34,7 @@ export class NavbarComponent implements AfterViewInit {
         this.isUser = this.tokenService.isLoggedIn();
         this.username = this.tokenService.getUser().username;
         if (this.isUser) {
+          this.isMod = this.tokenService.isMod();
           this.userService.getAvatar(this.tokenService.getUser().id).subscribe(
             data => {
               if (data.avatar !== null) {
@@ -88,6 +90,7 @@ export class NavbarComponent implements AfterViewInit {
 
     this.tokenService.signOut();
     this.isUser = false;
+    this.isMod = false;
     this.router.navigate(['']);
   }
 

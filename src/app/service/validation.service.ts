@@ -39,4 +39,15 @@ export default class ValidationService {
       return null;
     };
   }
+
+  static future():ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      const userDate = new Date(control.value);
+      const now = new Date();
+      if (now.getTime() > userDate.getTime()) {
+        return {future: true};
+      }
+      return null;
+    };
+  }
 }

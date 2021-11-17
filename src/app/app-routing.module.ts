@@ -13,6 +13,13 @@ import {ProfileComponent} from './components/profil/profile.component';
 import {FindUserComponent} from './components/find-user/find-user.component';
 import {UserShowComponent} from './components/user-show/user-show.component';
 import {CreateUserComponent} from './components/create-user/create-user.component';
+import {AddCategoryComponent} from './components/add-category/add-category.component';
+import {ShowCategoriesComponent} from './components/show-categories/show-categories.component';
+import {AddEventComponent} from './components/add-event/add-event.component';
+import {FindEventComponent} from './components/find-event/find-event.component';
+import {ShowMyEventsComponent} from './components/show-my-events/show-my-events.component';
+import {ShowJoinedEventsComponent} from './components/show-joined-events/show-joined-events.component';
+import {ShowRequestToJoinComponent} from './components/show-request-to-join/show-request-to-join.component';
 
 
 const routes: Routes = [
@@ -30,6 +37,13 @@ const routes: Routes = [
   {path: 'userShow/:id', component: UserShowComponent},
   {path: 'findUser', component: FindUserComponent},
   {path: 'addUser', component: CreateUserComponent},
+  {path: 'addCategory', component: AddCategoryComponent},
+  {path: 'showCategories', component: ShowCategoriesComponent},
+  {path: 'addEvent', component: AddEventComponent},
+  {path: 'findEvent', component: FindEventComponent},
+  {path: 'showMyEvents', component: ShowMyEventsComponent},
+  {path: 'showJoined', component: ShowJoinedEventsComponent},
+  {path: 'showRequest', component: ShowRequestToJoinComponent},
   {path: '**', component: NotFoundComponent},
   {path: 'basic-ui', loadChildren: () => import('./basic-ui/basic-ui.module').then(m => m.BasicUiModule)},
   {path: 'charts', loadChildren: () => import('./charts/charts.module').then(m => m.ChartsDemoModule)},
