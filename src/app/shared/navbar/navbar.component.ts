@@ -16,7 +16,7 @@ export class NavbarComponent implements AfterViewInit {
   public iconOnlyToggled = false;
   public sidebarToggled = false;
   @Input() isUser: boolean;
-  public isMod: boolean;
+  @Input() isMod: boolean;
   public username: string;
   avatar: SafeResourceUrl;
 

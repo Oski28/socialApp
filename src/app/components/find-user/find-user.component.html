@@ -109,7 +109,10 @@
         </table>
       </div>
     </div>
-    <div class="card-body">
+    <div class="card-body text-center" *ngIf="users.length == 0">
+      <h4>Brak danych do wyświetlenia</h4>
+    </div>
+    <div class="card-body" *ngIf="!(users.length == 0)">
       <ngb-pagination (pageChange)="loadPage($event)" [collectionSize]="totalElements" [pageSize]="pageSize"
                       [page]="currentPage+1" aria-label="user pagination"
                       class="d-flex justify-content-center pagination-success"></ngb-pagination>

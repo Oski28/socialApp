@@ -24,7 +24,7 @@
             <label for="description">Opis</label>
             <textarea type="text" class="form-control form-control-lg" id="description" formControlName="description"
                       name="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-                      placeholder="Podaj opis"></textarea>
+                      placeholder="Podaj opis" maxlength="300" minlength="1" style="min-height: 150px"></textarea>
             <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.description.errors && submitted">
               <div *ngIf="f.description.errors.required">Nazwisko jest wymagane</div>
               <div *ngIf="f.description.errors.minlength">

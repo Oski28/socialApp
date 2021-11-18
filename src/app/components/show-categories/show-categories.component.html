@@ -54,6 +54,9 @@
           </tbody>
         </table>
       </div>
+      <div class="card-body text-center" *ngIf="categories.length == 0">
+        <h4>Brak danych do wyświetlenia</h4>
+      </div>
     </div>
   </div>
   <ng-template #removeModalContent let-modal class="modal fade" id="removeModal" aria-labelledby="removeModal">

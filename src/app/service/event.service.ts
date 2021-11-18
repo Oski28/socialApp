@@ -21,4 +21,17 @@ export class EventService {
       freeJoin, categories, chatName
     }, httpOptionsJson);
   }
+
+  getAllNonParticipate(column: string = 'id', direction: string = 'ASC', filter: string = '', page: string = '0',
+                       size: string = '5', activeDate: string = 'true'): Observable<any> {
+    const httpOptions = {
+      headers: {'Content-Type': 'application/json'},
+      params: {column, direction, filter, page, size, activeDate}
+    };
+    return this.http.get(API.concat('user/nonparticipating'), httpOptions);
+  }
+
+  join(id: number): Observable<any> {
+    return this.http.patch(API.concat(id.toString()).concat('/join'), httpOptionsJson);
+  }
 }
