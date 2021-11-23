@@ -1,12 +1,6 @@
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
-      <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
-        Błąd: {{errorMessage}}
-      </div>
-      <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
-        {{correctMessage}}
-      </div>
       <form class="d-flex bg-dark mb-4" action="#">
         <div class="input-group">
           <div class="input-group-prepend bg-transparent">
@@ -110,14 +104,17 @@
             <div class="media">
               <div class="media-body">
                 <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
-                  <button class="btn btn-info btn-block mb-2" *ngIf="event.freeJoin" (click)="join(event.id)">Dołącz do
+                  <button class="btn btn-info btn-block mb-2" *ngIf="event.freeJoin"
+                          (click)="join(event.id); openModalInfo(infoModal)">Dołącz do
                     wydarzenia
                   </button>
-                  <button class="btn btn-info btn-block mb-2" *ngIf="!event.freeJoin" (click)="request(event.id)">Wyślij
+                  <button class="btn btn-info btn-block mb-2" *ngIf="!event.freeJoin"
+                          (click)="request(event.id); openModalInfo(infoModal)">Wyślij
                     prośbę
                     o dołączenie
                   </button>
-                  <button type="button" (click)="openModalReport(reportModal)" class="btn btn-danger btn-block">Zgłoś
+                  <button type="button" (click)="openModalReport(reportModal, event.id, event.organizerId)"
+                          class="btn btn-danger btn-block">Zgłoś
                     administracji
                   </button>
                 </div>
@@ -132,7 +129,7 @@
     <div class="modal-content bg-danger">
       <div class="modal-header">
         <h5 class="modal-title" id="removeModalLabel">Zgłoszenie </h5>
-        <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+        <button type="button" class="close" (click)="modal.dismiss();" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -154,9 +151,31 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="modal.close();">Zgłoś
+        <button type="button" class="btn btn-success" (click)="onSubmit(); openModalInfo(infoModal)">
+          Zgłoś
         </button>
         <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #infoModal let-modal class="modal fade" id="infoModal" aria-labelledby="infoModal">
+    <div class="modal-content bg-secondary">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoModalLabel">Informacja</h5>
+        <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
+          Błąd: {{errorMessage}}
+        </div>
+        <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
+          {{correctMessage}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Zamknij</button>
       </div>
     </div>
   </ng-template>

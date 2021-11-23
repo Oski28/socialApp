@@ -1,8 +1,9 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {EventService} from '../../service/event.service';
 import {RequestToJoinService} from '../../service/request-to-join.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ReportService} from '../../service/report.service';
 
 @Component({
   selector: 'app-find-event',
@@ -26,9 +27,11 @@ export class FindEventComponent implements AfterViewInit {
 
   form!: FormGroup;
   submitted = false;
+  eventId = null;
+  userId = null;
 
   constructor(private eventService: EventService, private requestToJoinService: RequestToJoinService,
-              private modalService: NgbModal, private formBuilder: FormBuilder) {
+              private modalService: NgbModal, private formBuilder: FormBuilder, private reportService: ReportService) {
   }
 
   ngAfterViewInit(): void {
@@ -139,8 +142,14 @@ export class FindEventComponent implements AfterViewInit {
     )
   }
 
-  openModalReport(reportModal) {
+  openModalReport(reportModal, eventId: number, userId: number) {
+    this.eventId = eventId;
+    this.userId = userId;
     this.modalService.open(reportModal);
+  }
+
+  openModalInfo(infoModal) {
+    this.modalService.open(infoModal);
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -148,6 +157,25 @@ export class FindEventComponent implements AfterViewInit {
   }
 
   onSubmit() {
-    //TODO
+    this.submitted = true;
+    if (this.form.invalid || this.form.controls.reason.pristine) {
+      return;
+    } else {
+      this.modalService.dismissAll();
+      this.reportService.create(this.form.controls.reason.value, this.userId, this.eventId).subscribe(
+        data => {
+          this.submitted = false;
+          this.form.reset();
+          this.correctMessage = 'Twoje zgłoszenie zostało wysłane administracji';
+          this.errorMessage = '';
+        },
+        err => {
+          this.submitted = false;
+          this.form.reset()
+          this.correctMessage = '';
+          this.errorMessage = err.error.message;
+        }
+      );
+    }
   }
 }

@@ -39,6 +39,7 @@ import {FindEventComponent} from './components/find-event/find-event.component';
 import {ShowMyEventsComponent} from './components/show-my-events/show-my-events.component';
 import {ShowJoinedEventsComponent} from './components/show-joined-events/show-joined-events.component';
 import {ShowRequestToJoinComponent} from './components/show-request-to-join/show-request-to-join.component';
+import { EditEventComponent } from './components/edit-event/edit-event.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import {ShowRequestToJoinComponent} from './components/show-request-to-join/show
     FindEventComponent,
     ShowMyEventsComponent,
     ShowJoinedEventsComponent,
-    ShowRequestToJoinComponent
+    ShowRequestToJoinComponent,
+    EditEventComponent
   ],
   imports: [
     BrowserModule,

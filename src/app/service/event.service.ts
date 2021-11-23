@@ -34,4 +34,25 @@ export class EventService {
   join(id: number): Observable<any> {
     return this.http.patch(API.concat(id.toString()).concat('/join'), httpOptionsJson);
   }
+
+  getAllForAuthUserCreate(column: string = 'id', direction: string = 'ASC', filter: string = '', page: string = '0',
+                          size: string = '5', activeDate: string = 'true'): Observable<any> {
+    const httpOptions = {
+      headers: {'Content-Type': 'application/json'},
+      params: {column, direction, filter, page, size, activeDate}
+    };
+    return this.http.get(API.concat('user/create'), httpOptions);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(API.concat(id.toString()), httpOptionsJson);
+  }
+
+  getOne(id: number): Observable<any> {
+    return this.http.get(API.concat(id.toString()), httpOptionsJson);
+  }
+
+  removeUserFromEvent(id: number, userId: any): Observable<any> {
+    return this.http.patch(API.concat(id.toString()).concat('/').concat(userId.toString()), httpOptionsJson);
+  }
 }
