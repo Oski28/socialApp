@@ -95,7 +95,7 @@
               <div class="media-body">
                 <p>Maksymalna ilość
                   uczestników: {{event.maxNumberOfParticipant ? event.maxNumberOfParticipant : 'Brak ograniczeń'}}</p>
-                <p>Aktualnie dołączyło: {{event.participateUsers}}</p>
+                <p>Aktualnie dołączyło: {{event.participateUsers.length}}</p>
                 <p>Wolny dostęp: {{event.freeJoin ? 'Tak' : 'Nie'}}</p>
                 <p>Kategorie wydarzenia:</p>
                 <ul>
@@ -115,7 +115,7 @@
                     </button>
                   </a>
                   <a routerLink="/editEvent/{{event.id}}">
-                    <button class="btn btn-warning btn-block mb-2">Edytuj wydarzenie
+                    <button class="btn btn-warning btn-block mb-2">Zarządzaj wydarzeniem
                     </button>
                   </a>
                   <button class="btn btn-danger btn-block mb-2"

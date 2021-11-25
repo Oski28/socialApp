@@ -71,7 +71,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 pr-1 bg-gradient-secondary" style="margin: 0 auto;" *ngIf="!isUserAdmin && isAuthAdmin">
+        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="!isUserAdmin && isAuthAdmin">
           <form class="pt-3" [formGroup]="formRole" (ngSubmit)="onSubmitRole()">
             <div class="form-group">
               <h5>Edytuj uprawnienia</h5>
@@ -101,7 +101,7 @@
             </div>
           </form>
         </div>
-        <div class="col-lg-6 pr-1 bg-gradient-secondary" style="margin: 0 auto;" *ngIf="!blocked && !isUserMod">
+        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="!blocked && !isUserMod">
           <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-group">
               <label for="banExpirationDate">Czasowe zawieszenie konta użytkownika</label>

@@ -118,4 +118,12 @@ export class UserService {
       roles
     }, httpOptionsJson);
   }
+
+  getAllForEvent(page: string = '0', size: string = '5', eventId: number): Observable<any> {
+    const httpOptions = {
+      headers: {'Content-Type': 'application/json'},
+      params: {page, size}
+    };
+    return this.http.get(API.concat('event/').concat(eventId.toString()), httpOptions);
+  }
 }

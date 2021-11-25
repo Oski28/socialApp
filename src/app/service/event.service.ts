@@ -55,4 +55,20 @@ export class EventService {
   removeUserFromEvent(id: number, userId: any): Observable<any> {
     return this.http.patch(API.concat(id.toString()).concat('/').concat(userId.toString()), httpOptionsJson);
   }
+
+  update(id: number, name: string, description: string, ageLimit: number, location: string, freeJoin: string): Observable<any> {
+    return this.http.put(API.concat(id.toString()), {name, description, ageLimit, location, freeJoin}, httpOptionsJson);
+  }
+
+  updateNumber(id: number, maxNumberOfParticipant: number): Observable<any> {
+    return this.http.patch(API.concat(id.toString()).concat('/number'), {maxNumberOfParticipant}, httpOptionsJson);
+  }
+
+  updateDate(id: number, date: DateTimeFormat): Observable<any> {
+    return this.http.patch(API.concat(id.toString()).concat('/date'), {date}, httpOptionsJson);
+  }
+
+  updateCategories(id: number, categories: any): Observable<any> {
+    return this.http.patch(API.concat(id.toString()).concat('/categories'), {categories}, httpOptionsJson);
+  }
 }

@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col-lg-6 pr-1 mb-1">
+          <div class="col-lg-6 pr-1 mb-1" >
             <img [src]="avatar" class="mb-2 mw-100 w-100 rounded" alt="image"
                  style="width:100% !important;  max-height:400px !important; max-width:400px !important;">
           </div>
@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col-lg-6 pr-1 grid-margin stretch-card mb-0 bg-gradient-secondary">
+          <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;">
             <form class="pt-3" [formGroup]="formAvatar" (ngSubmit)="onSubmitAvatar()">
               <div class="form-group">
                 <label for="avatar">Avatar</label>
@@ -103,8 +103,66 @@
                 <button class="btn btn-success btn-block mb-2">Zmień avatar</button>
               </div>
             </form>
+            <form class="pt-3" [formGroup]="formPassword" (ngSubmit)="onSubmitPassword()">
+              <div class="form-group">
+                <label for="oldPassword">Stare hasło</label>
+                <input type="password" class="form-control form-control-lg" id="oldPassword"
+                       formControlName="oldPassword"
+                       name="oldPassword"
+                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.oldPassword.errors }"
+                       placeholder="Podaj hasło"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fPassword.oldPassword.errors && submittedPassword">
+                  <div *ngIf="fPassword.oldPassword.errors.required">Hasło jest wymagane</div>
+                  <div *ngIf="fPassword.oldPassword.errors.minlength">
+                    Hasło musi mieć co najmniej 6 znaków
+                  </div>
+                  <div *ngIf="fPassword.oldPassword.errors.pattern">
+                    Hasło musi się składać z przynajmniej: 1 wielkiej litery, 1 małej litery, 1 cyfry
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="newPassword">Nowe hasło</label>
+                <input type="password" class="form-control form-control-lg" id="newPassword"
+                       formControlName="newPassword"
+                       name="newPassword"
+                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.newPassword.errors }"
+                       placeholder="Podaj hasło"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fPassword.newPassword.errors && submittedPassword">
+                  <div *ngIf="fPassword.newPassword.errors.required">Hasło jest wymagane</div>
+                  <div *ngIf="fPassword.newPassword.errors.minlength">
+                    Hasło musi mieć co najmniej 6 znaków
+                  </div>
+                  <div *ngIf="fPassword.newPassword.errors.pattern">
+                    Hasło musi się składać z przynajmniej: 1 wielkiej litery, 1 małej litery, 1 cyfry
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="confirmPassword">Potwierdzenie hasła</label>
+                <input type="password" class="form-control form-control-lg" id="confirmPassword"
+                       formControlName="confirmPassword"
+                       name="confirmPassword"
+                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.confirmPassword.errors }"
+                       placeholder="Potwierdź hasło"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fPassword.confirmPassword.errors && submittedPassword">
+                  <div *ngIf="fPassword.confirmPassword.errors.required">Potwierdzenie hasła jest wymagane</div>
+                  <div *ngIf="fPassword.confirmPassword.errors.matching">
+                    Podane hasła nie zgadzają się
+                  </div>
+                </div>
+              </div>
+              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                <button class="btn btn-success btn-block mb-2">Zmień hasło</button>
+              </div>
+            </form>
           </div>
-          <div class="col-lg-6 pr-1 bg-gradient-secondary">
+          <div class="col-lg-6 pr-1 bg-gradient-info">
             <form class="pt-3" [formGroup]="formData" (ngSubmit)="onSubmitData()">
               <div class="form-group">
                 <label for="firstname">Imie</label>
@@ -191,65 +249,8 @@
               </div>
             </form>
           </div>
-          <div class="col-lg-6 pr-1 bg-gradient-secondary" style="margin: 0 auto;">
-            <form class="pt-3" [formGroup]="formPassword" (ngSubmit)="onSubmitPassword()">
-              <div class="form-group">
-                <label for="oldPassword">Stare hasło</label>
-                <input type="password" class="form-control form-control-lg" id="oldPassword"
-                       formControlName="oldPassword"
-                       name="oldPassword"
-                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.oldPassword.errors }"
-                       placeholder="Podaj hasło"/>
-                <div class="invalid-feedback text-white text-center bg-info"
-                     *ngIf="fPassword.oldPassword.errors && submittedPassword">
-                  <div *ngIf="fPassword.oldPassword.errors.required">Hasło jest wymagane</div>
-                  <div *ngIf="fPassword.oldPassword.errors.minlength">
-                    Hasło musi mieć co najmniej 6 znaków
-                  </div>
-                  <div *ngIf="fPassword.oldPassword.errors.pattern">
-                    Hasło musi się składać z przynajmniej: 1 wielkiej litery, 1 małej litery, 1 cyfry
-                  </div>
-                </div>
-              </div>
+          <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;">
 
-              <div class="form-group">
-                <label for="newPassword">Nowe hasło</label>
-                <input type="password" class="form-control form-control-lg" id="newPassword"
-                       formControlName="newPassword"
-                       name="newPassword"
-                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.newPassword.errors }"
-                       placeholder="Podaj hasło"/>
-                <div class="invalid-feedback text-white text-center bg-info"
-                     *ngIf="fPassword.newPassword.errors && submittedPassword">
-                  <div *ngIf="fPassword.newPassword.errors.required">Hasło jest wymagane</div>
-                  <div *ngIf="fPassword.newPassword.errors.minlength">
-                    Hasło musi mieć co najmniej 6 znaków
-                  </div>
-                  <div *ngIf="fPassword.newPassword.errors.pattern">
-                    Hasło musi się składać z przynajmniej: 1 wielkiej litery, 1 małej litery, 1 cyfry
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="confirmPassword">Potwierdzenie hasła</label>
-                <input type="password" class="form-control form-control-lg" id="confirmPassword"
-                       formControlName="confirmPassword"
-                       name="confirmPassword"
-                       [ngClass]="{ 'is-invalid': submittedPassword && fPassword.confirmPassword.errors }"
-                       placeholder="Potwierdź hasło"/>
-                <div class="invalid-feedback text-white text-center bg-info"
-                     *ngIf="fPassword.confirmPassword.errors && submittedPassword">
-                  <div *ngIf="fPassword.confirmPassword.errors.required">Potwierdzenie hasła jest wymagane</div>
-                  <div *ngIf="fPassword.confirmPassword.errors.matching">
-                    Podane hasła nie zgadzają się
-                  </div>
-                </div>
-              </div>
-              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
-                <button class="btn btn-success btn-block mb-2">Zmień hasło</button>
-              </div>
-            </form>
           </div>
           <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
             <button

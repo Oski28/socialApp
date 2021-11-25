@@ -16,4 +16,13 @@ export class RequestToJoinService {
   request(eventId: number): Observable<any> {
     return this.http.post(API, {eventId}, httpOptionsJson);
   }
+
+
+  getAllForEvent(page: string = '0', size: string = '5', eventId: number): Observable<any> {
+    const httpOptions = {
+      headers: {'Content-Type': 'application/json'},
+      params: {page, size}
+    };
+    return this.http.get(API.concat(eventId.toString()), httpOptions);
+  }
 }

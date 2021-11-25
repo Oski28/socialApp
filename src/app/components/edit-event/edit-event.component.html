@@ -6,6 +6,10 @@
           <div class="col-lg-12 pr-1">
             <div class="card">
               <div class="card-body" style="padding: 0;">
+                <div class="alert alert-info text-center">
+                  Uwaga! W przypadku zmiany limitu wiekowego wydarzenia uczestnicy nie spełniający nowego limitu zostaną
+                  usunięci z listy uczestników
+                </div>
                 <h4 class="card-title">Dane wydarzenia</h4>
                 <table class="table mb-0">
                   <tbody>
@@ -16,15 +20,21 @@
                     </td>
                   </tr>
                   <tr>
+                    <td class="pl-0">Opis</td>
+                    <td class="text-right">
+                      {{description}}
+                    </td>
+                  </tr>
+                  <tr>
                     <td class="pl-0">Limit wiekowy</td>
                     <td class="text-right">
-                      {{ageLimit}}
+                      {{ageLimit ? ageLimit : 'Brak ograniczeń'}}
                     </td>
                   </tr>
                   <tr>
                     <td class="pl-0">Maksymalna liczba uczestników</td>
                     <td class="text-right">
-                      {{maxUsers}}
+                      {{maxUsers ? maxUsers : 'Brak ograniczeń'}}
                     </td>
                   </tr>
                   <tr>
@@ -57,45 +67,172 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 pr-1 bg-gradient-secondary" style="margin: 0 auto;">
-          <form class="pt-3" [formGroup]="" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-              <h5>Edytuj uprawnienia</h5>
-              <div class="row">
-                <div class="col-lg-4">
-                  <label for="User"> <input type="radio" class="form-control"
-                                            formControlName="role"
-                                            name="role"
-                                            id="User" value="USER"/>Użytkownik</label>
-                </div>
-                <div class="col-lg-4">
-                  <label for="Mod"> <input type="radio" class="form-control"
-                                           formControlName="role"
-                                           name="role"
-                                           id="Mod" value="MODERATOR"/>Moderator</label>
-                </div>
-                <div class="col-lg-4">
-                  <label for="Admin"> <input type="radio" class="form-control"
-                                             formControlName="role"
-                                             name="role"
-                                             id="Admin" value="ADMIN"/>Adminstrator</label>
+        <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
+          {{correctMessage}}
+        </div>
+        <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
+          {{errorMessage}}
+        </div>
+        <h4 class="card-title">Edycja wydarzenia</h4>
+        <div class="row">
+          <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;">
+            <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit();">
+              <div class="form-group">
+                <label for="name">Nazwa wydarzenia</label>
+                <input type="text" class="form-control form-control-lg" id="name" formControlName="name"
+                       name="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                       placeholder="Podaj nazwe">
+                <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.name.errors && submitted">
+                  <div *ngIf="f.name.errors.required">Nazwa jest wymagana</div>
+                  <div *ngIf="f.name.errors.minlength">
+                    Nazwa musi mieć co najmniej 3 znaki
+                  </div>
+                  <div *ngIf="f.name.errors.maxlength">
+                    Nazwa musi mieć maksymalnie 50 znaków
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="form-group d-grid gap-2 col-8 mx-auto mt-3 p-2">
-              <button class="btn btn-success btn-block mb-2">Zmień uprawnienia</button>
-            </div>
-          </form>
-        </div>
-        <div class="col-lg-6 pr-1 bg-gradient-secondary" style="margin: 0 auto;">
-          <form class="pt-3" [formGroup]="" (ngSubmit)="onSubmit()">
 
-            <div class="form-group d-grid gap-2 col-8 mx-auto mt-3 p-2">
-              <button class="btn btn-success btn-block mb-2">Zbanuj</button>
-            </div>
-          </form>
+              <div class="form-group">
+                <label for="description">Opis</label>
+                <textarea type="text" class="form-control form-control-lg" id="description"
+                          formControlName="description"
+                          name="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+                          placeholder="Podaj opis" maxlength="300" minlength="1" style="min-height: 150px"></textarea>
+                <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.description.errors && submitted">
+                  <div *ngIf="f.description.errors.required">Nazwisko jest wymagane</div>
+                  <div *ngIf="f.description.errors.minlength">
+                    Opis musi mieć co najmniej 1 znak
+                  </div>
+                  <div *ngIf="f.description.errors.maxlength">
+                    Opis musi mieć maksymalnie 300 znaków
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ageLimit">Ograniczenie wiekowe</label>
+                <select (change)="changeAgeLimit($event.target.value)" class="form-control form-control-lg"
+                        id="ageLimit"
+                        name="ageLimit">
+                  <option selected="{{ageLimit == 12}}">12</option>
+                  <option selected="{{ageLimit == 13}}">13</option>
+                  <option selected="{{ageLimit == 14}}">14</option>
+                  <option selected="{{ageLimit == 15}}">15</option>
+                  <option selected="{{ageLimit == 16}}">16</option>
+                  <option selected="{{ageLimit == 17}}">17</option>
+                  <option selected="{{ageLimit == 18}}">18</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="location">Lokalizacja</label>
+                <input type="text" class="form-control form-control-lg" id="location"
+                       formControlName="location"
+                       name="location"
+                       [ngClass]="{ 'is-invalid': submitted && f.location.errors }"
+                       placeholder="Podaj lokalizacje"/>
+                <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.location.errors && submitted">
+                  <div *ngIf="f.location.errors.required">Lokalizacja jest wymagana</div>
+                  <div *ngIf="f.location.errors.minlength">
+                    Lokalizacja musi mieć co najmniej 1 znak
+                  </div>
+                  <div *ngIf="f.location.errors.maxlength">
+                    Lokalizacja musi mieć maksymalnie 200 znaków
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-form-label mb-0">Wolny dostęp</label>
+                <div class="form-check form-check-primary">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" formControlName="freeJoin"
+                           name="freeJoin" id="freeJoin1" value="true">
+                    Tak
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+                <div class="form-check form-check-primary">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" formControlName="freeJoin"
+                           name="freeJoin" id="freeJoin2"
+                           value="false">
+                    Nie
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                <button class="btn btn-success btn-block mb-2">Edytuj wydarzenie</button>
+              </div>
+            </form>
+          </div>
+          <div class="col-lg-6 pr-1  bg-gradient-info" style="margin: 0 auto;">
+            <form class="pt-3" [formGroup]="formNumber" (ngSubmit)="onSubmitNumber()">
+              <div class="form-group">
+                <label for="maxNumberOfParticipant">Maksymalna ilość uczestników</label>
+                <input type="number" class="form-control form-control-lg" id="maxNumberOfParticipant"
+                       formControlName="maxNumberOfParticipant"
+                       name="maxNumberOfParticipant" min="2" max="149" value="50"
+                       [ngClass]="{ 'is-invalid': submittedNumber && fNumber.maxNumberOfParticipant.errors }"
+                       placeholder="Podaj maksymalną ilość uczestników"/>
+                <div class="invalid-feedback text-white text-center bg-info"
+                     *ngIf="fNumber.maxNumberOfParticipant.errors && submitted">
+                  <div *ngIf="fNumber.maxNumberOfParticipant.errors.required">
+                    Ilość uczestników jest wymagana
+                  </div>
+                  <div *ngIf="fNumber.maxNumberOfParticipant.errors.min">
+                    Minimalna ilość uczestników to 2
+                  </div>
+                  <div *ngIf="fNumber.maxNumberOfParticipant.errors.max">
+                    Maksymalna ilość uczestników to 149
+                  </div>
+                </div>
+              </div>
+              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                <button class="btn btn-success btn-block mb-2">Zmień maksymalną liczbę uczestników</button>
+              </div>
+            </form>
+            <form class="pt-3" [formGroup]="formDate" (ngSubmit)="onSubmitDate()">
+              <div class="form-group">
+                <label for="date">Data wydarzenia</label>
+                <input type="datetime-local" class="form-control form-control-lg" id="date"
+                       formControlName="date"
+                       name="date"
+                       [ngClass]="{ 'is-invalid': submittedDate && fDate.date.errors }" required/>
+                <div class="invalid-feedback text-white text-center bg-info" *ngIf="fDate.date.errors && submittedDate">
+                  <div *ngIf="fDate.date.errors.required">Data jest wymagana</div>
+                  <div *ngIf="fDate.date.errors.future">Data powinna być przyszłą datą
+                  </div>
+                </div>
+              </div>
+              <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                <button class="btn btn-success btn-block mb-2">Zmień date wydarzenia</button>
+              </div>
+            </form>
+            <form class="pt-3" [formGroup]="formCategories" (ngSubmit)="onSubmitCategories()">
+              <div class="form-group">
+                <label class="col-form-label mb-0">Kategorie</label>
+                <div class="form-check form-check-primary" *ngFor="let category of categoriesData">
+                  <label class="form-check-label">
+                    <input (change)="changeCheckbox($event)"
+                           type="checkbox" class="form-check-input" name="category{{category.id}}"
+                           id="category{{category.id}}" value="{{category.name}}"
+                           [checked]="categories.indexOf(category.name) >= 0">
+                    {{category.name}}
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+                <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                  <button class="btn btn-success btn-block mb-2">Zmień kategorie wydarzenia</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-        <h4 class="card-title">Uczestnicy wydarzenia</h4>
+        <h4 class="card-title mt-4">Uczestnicy wydarzenia</h4>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -152,6 +289,58 @@
             </tbody>
           </table>
         </div>
+        <div class="card-body" *ngIf="users.length > pageSizeUsers">
+          <ngb-pagination (pageChange)="loadPageUsers($event)" [collectionSize]="totalElementsUsers"
+                          [pageSize]="pageSizeUsers"
+                          [page]="currentPageUsers+1" aria-label="user pagination"
+                          class="d-flex justify-content-center pagination-success"></ngb-pagination>
+        </div>
+        <h4 class="card-title mt-4">Prośby o dołączenie</h4>
+        <div class="card-body text-center" *ngIf="requestToJoin.length == 0">
+          <h4>Brak danych do wyświetlenia</h4>
+        </div>
+        <div class="table-responsive" *ngIf="!(requestToJoin.length == 0)">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>
+                Avatar
+              </th>
+              <th>
+                Nazwa użytkownika
+              </th>
+              <th>
+
+              </th>
+              <th>
+
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let request of requestToJoin">
+              <td class="py-1">
+                <img [src]="request.avatar" alt="image"/>
+              </td>
+              <td>
+                <a routerLink="/userShow/{{request.id}}" style="color: orangered">{{request.username}}</a>
+              </td>
+              <td>
+                Akceptuj
+              </td>
+              <td>
+                Odrzuć
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-body" *ngIf="requestToJoin.length > pageSizeRequest">
+          <ngb-pagination (pageChange)="loadPageRequest($event)" [collectionSize]="totalElementsRequest"
+                          [pageSize]="pageSizeRequest"
+                          [page]="currentPageRequest+1" aria-label="user pagination"
+                          class="d-flex justify-content-center pagination-success"></ngb-pagination>
+        </div>
       </div>
     </div>
     <ng-template #removeModalContent let-modal class="modal fade" id="removeModal" aria-labelledby="removeModal">
@@ -166,8 +355,31 @@
           <p>Czy na pewno chcesz usunąć użytkownika {{removeUsername}} z wydarzenia?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" (click)="removeUser(); modal.close();">Usuń</button>
+          <button type="button" class="btn btn-success" (click)="removeUser(); modal.close(); openModalInfo(infoModal)">
+            Usuń
+          </button>
           <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #infoModal let-modal class="modal fade" id="infoModal" aria-labelledby="infoModal">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">Informacja</h5>
+          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger text-center" *ngIf="errorMessageModal !== ''">
+            Błąd: {{errorMessageModal}}
+          </div>
+          <div class="alert alert-success text-center" *ngIf="correctMessageModal !== ''">
+            {{correctMessageModal}}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="modal.close()">Zamknij</button>
         </div>
       </div>
     </ng-template>
