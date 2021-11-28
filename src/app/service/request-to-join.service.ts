@@ -25,4 +25,21 @@ export class RequestToJoinService {
     };
     return this.http.get(API.concat(eventId.toString()), httpOptions);
   }
+
+  edit(id: number, status: string): Observable<any> {
+    return this.http.patch(API.concat(id.toString()), {status}, httpOptionsJson);
+  }
+
+  getAllForUser(column: string = 'id', direction: string = 'ASC', page: string = '0',
+                size: string = '5'): Observable<any> {
+    const httpOptions = {
+      headers: {'Content-Type': 'application/json'},
+      params: {column, direction, page, size}
+    };
+    return this.http.get(API.concat('user'), httpOptions);
+  }
+
+  resend(id: number) {
+    return this.http.patch(API.concat(id.toString().concat('/resend')), httpOptionsJson);
+  }
 }

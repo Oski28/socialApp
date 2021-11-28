@@ -311,4 +311,38 @@ export class EditEventComponent implements OnInit {
     this.currentPageUsers = page - 1;
     this.getUsers();
   }
+
+  acceptRequest(id: number) {
+    status = 'ACCEPTED';
+    this.requestToJoinService.edit(id, status).subscribe(
+      data => {
+        this.correctMessage = 'Zmieniono status prośby';
+        this.errorMessage = '';
+        this.onReset();
+        this.ngOnInit();
+      },
+      err => {
+        this.correctMessage = '';
+        this.errorMessage = err.error.message;
+        this.onReset();
+      }
+    )
+  }
+
+  rejectRequest(id: number) {
+    status = 'REJECTED';
+    this.requestToJoinService.edit(id, status).subscribe(
+      data => {
+        this.correctMessage = 'Zmieniono status prośby';
+        this.errorMessage = '';
+        this.onReset();
+        this.ngOnInit();
+      },
+      err => {
+        this.correctMessage = '';
+        this.errorMessage = err.error.message;
+        this.onReset();
+      }
+    )
+  }
 }

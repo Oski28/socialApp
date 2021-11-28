@@ -46,7 +46,6 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    window.scrollTo(0, 0);
     this.userService.getOne(this.tokenService.getUser().id).subscribe(data => {
         this.id = data.id;
         this.username = data.username;

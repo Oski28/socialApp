@@ -323,13 +323,19 @@
                 <img [src]="request.avatar" alt="image"/>
               </td>
               <td>
-                <a routerLink="/userShow/{{request.id}}" style="color: orangered">{{request.username}}</a>
+                <a routerLink="/userShow/{{request.userId}}" style="color: orangered">{{request.username}}</a>
               </td>
               <td>
-                Akceptuj
+                <button type="button" class="btn btn-gradient-success btn-rounded btn-fw"
+                        (click)="acceptRequest(request.id)">
+                  Akceptuj
+                </button>
               </td>
               <td>
-                Odrzuć
+                <button type="button" class="btn btn-gradient-danger btn-rounded btn-fw"
+                        (click)="rejectRequest(request.id)">
+                  Odrzuć
+                </button>
               </td>
             </tr>
             </tbody>

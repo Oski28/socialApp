@@ -5,6 +5,7 @@ import {AuthService} from '../../service/auth.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {UserService} from '../../service/user.service';
+import {NoticeService} from '../../service/notice.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,9 +21,12 @@ export class NavbarComponent implements AfterViewInit {
   public username: string;
   avatar: SafeResourceUrl;
 
+  notices: any[];
+
   constructor(config: NgbDropdownConfig, private tokenService: TokenStorageService,
               private authService: AuthService, private router: Router, private sanitizer: DomSanitizer,
-              private userService: UserService, private modalService: NgbModal) {
+              private userService: UserService, private modalService: NgbModal,
+              private noticeService: NoticeService) {
     config.placement = 'bottom-right';
   }
 
@@ -44,6 +48,11 @@ export class NavbarComponent implements AfterViewInit {
               } else {
                 this.avatar = 'assets\\images\\usericon.png';
               }
+            }
+          )
+          this.noticeService.getAllNotReceived().subscribe(
+            data => {
+              this.notices = data.content;
             }
           )
         }

@@ -21,6 +21,8 @@ import {ShowMyEventsComponent} from './components/show-my-events/show-my-events.
 import {ShowJoinedEventsComponent} from './components/show-joined-events/show-joined-events.component';
 import {ShowRequestToJoinComponent} from './components/show-request-to-join/show-request-to-join.component';
 import {EditEventComponent} from './components/edit-event/edit-event.component';
+import {ShowNoticeComponent} from './components/show-notice/show-notice.component';
+import {ShowNoticesComponent} from './components/show-notices/show-notices.component';
 
 
 const routes: Routes = [
@@ -37,10 +39,12 @@ const routes: Routes = [
   {path: 'signin/:guard', component: SigninComponent},
   {path: 'userShow/:id', component: UserShowComponent},
   {path: 'editEvent/:id', component: EditEventComponent},
+  {path: 'notice/:id', component: ShowNoticeComponent},
   {path: 'findUser', component: FindUserComponent},
   {path: 'addUser', component: CreateUserComponent},
   {path: 'addCategory', component: AddCategoryComponent},
   {path: 'showCategories', component: ShowCategoriesComponent},
+  {path: 'noticesShow', component: ShowNoticesComponent},
   {path: 'addEvent', component: AddEventComponent},
   {path: 'findEvent', component: FindEventComponent},
   {path: 'showMyEvents', component: ShowMyEventsComponent},

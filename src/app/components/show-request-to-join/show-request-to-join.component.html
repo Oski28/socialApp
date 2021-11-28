@@ -1,1 +1,105 @@
-<p>show-request-to-join works!</p>
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
+        {{correctMessage}}
+      </div>
+      <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
+        {{errorMessage}}
+      </div>
+      <form class="form-sample">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="pageSize">Ilość elementów</label>
+              <div class="col-lg-12">
+                <select (change)="changeSize($event.target.value)" class="form-control" id="pageSize">
+                  <option>5</option>
+                  <option>10</option>
+                  <option selected="selected">20</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="column">Kolumna sortowania</label>
+              <div class="col-lg-12">
+                <select (change)="changeColumn($event.target.value)" class="form-control" id="column">
+                  <option selected="selected">Data wysłania</option>
+                  <option>Status</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="direction">Kierunek
+                sortowania</label>
+              <div class="col-lg-12">
+                <select class="form-control" id="direction" (change)="changeDirection($event.target.value)">
+                  <option selected="selected">Rosnąco</option>
+                  <option>Malejąco</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <h4 class="card-title">Prośby o dołączenie</h4>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>
+              Nazwa wydarzenia
+            </th>
+            <th>
+              Data wydarzenia
+            </th>
+            <th>
+              Status
+            </th>
+            <th>
+              Data wysłania
+            </th>
+            <th>
+
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let req of request">
+            <td class="py-1">
+              <a routerLink="/eventShow/{{req.eventId}}" style="color: orangered"> {{req.eventName}}</a>
+            </td>
+            <td>
+              {{req.date.substr(0, 10)}}, {{req.date.substr(11, 5)}}
+            </td>
+            <td>
+              {{req.status}}
+            </td>
+            <td>
+              {{req.addDate.substr(0, 10)}}, {{req.addDate.substr(11, 5)}}
+            </td>
+            <td *ngIf="req.status == 'Oczekująca' || req.status == 'Odrzucona'">
+              <button type="button" class="btn btn-gradient-primary btn-rounded btn-fw"
+                      (click)="resend(req.id)">
+                Wyślij ponownie
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-body text-center" *ngIf="request.length == 0">
+      <h4>Brak danych do wyświetlenia</h4>
+    </div>
+    <div class="card-body" *ngIf="!(request.length == 0)">
+      <ngb-pagination (pageChange)="loadPage($event)" [collectionSize]="totalElements" [pageSize]="pageSize"
+                      [page]="currentPage+1" aria-label="user pagination"
+                      class="d-flex justify-content-center pagination-success"></ngb-pagination>
+    </div>
+  </div>
+</div>

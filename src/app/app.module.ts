@@ -40,6 +40,8 @@ import {ShowMyEventsComponent} from './components/show-my-events/show-my-events.
 import {ShowJoinedEventsComponent} from './components/show-joined-events/show-joined-events.component';
 import {ShowRequestToJoinComponent} from './components/show-request-to-join/show-request-to-join.component';
 import { EditEventComponent } from './components/edit-event/edit-event.component';
+import { ShowNoticeComponent } from './components/show-notice/show-notice.component';
+import { ShowNoticesComponent } from './components/show-notices/show-notices.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +72,9 @@ import { EditEventComponent } from './components/edit-event/edit-event.component
     ShowMyEventsComponent,
     ShowJoinedEventsComponent,
     ShowRequestToJoinComponent,
-    EditEventComponent
+    EditEventComponent,
+    ShowNoticeComponent,
+    ShowNoticesComponent
   ],
   imports: [
     BrowserModule,
