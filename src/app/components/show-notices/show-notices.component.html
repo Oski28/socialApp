@@ -1,0 +1,29 @@
+<div class="col-lg-6 grid-margin mb-0" style="padding: 10px;margin-left: auto; margin-right: auto;"
+     *ngFor="let notice of notices">
+  <div class="card">
+    <div class="card-body text-center" style="background-color: whitesmoke; padding: 10px;" *ngIf="notice.received">
+      {{notice.content}}
+      <i class="mdi mdi-folder-remove"></i>
+    </div>
+    <div class="card-body text-center" style="background-color: lightgray; padding: 20px;" *ngIf="!notice.received">
+      {{notice.content}}
+      <div class="form-group col-6 mx-auto" style="margin-top: 10px; margin-bottom: 0px;">
+        <button (click)="setReceived(notice.id);" class="btn btn-info btn-block">Oznacz jako przeczytane
+        </button>
+      </div>
+      <i class="mdi mdi-folder-remove"></i>
+    </div>
+  </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card" *ngIf="notices.length == 0">
+  <div class="card">
+    <div class="card-body text-center">
+      <h4>Brak danych do wyświetlenia</h4>
+    </div>
+  </div>
+</div>
+<div class="card-body" *ngIf="!(notices.length == 0)">
+  <ngb-pagination (pageChange)="loadPage($event)" [collectionSize]="totalElements" [pageSize]="pageSize"
+                  [page]="currentPage+1" aria-label="user pagination"
+                  class="d-flex justify-content-center pagination-success"></ngb-pagination>
+</div>
