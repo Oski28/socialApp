@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col-lg-6 pr-1 mb-1" >
+          <div class="col-lg-6 pr-1 mb-1">
             <img [src]="avatar" class="mb-2 mw-100 w-100 rounded" alt="image"
                  style="width:100% !important;  max-height:400px !important; max-width:400px !important;">
           </div>
@@ -260,9 +260,32 @@
             >
               Zresetuj
             </button>
+            <button type="button" class="btn btn-danger btn-block" (click)="openModal(removeModalContent)">
+              <i class="mdi mdi-account-remove mr-2 text-dark"></i>
+              Usuń konto
+            </button>
           </div>
         </div>
       </div>
     </div>
+    <ng-template #removeModalContent let-modal class="modal fade" id="removeModal" aria-labelledby="removeModal">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeModalLabel">Usuwanie konta</h5>
+          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Czy na pewno chcesz usunąć konto? W każdej chwili możesz je odzyskać klikając w link przesłany na Twój
+            adres email. Wiąże się to jednak z usunięciem wszystkich oznak Twojej dotychczasowej aktywności w
+            serwisie.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="removeAccount(); modal.close();">Usuń</button>
+          <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div>

@@ -35,4 +35,12 @@ export class NoticeService {
     };
     return this.http.get(API.concat('user'), httpOptions);
   }
+
+  remove(id: number): Observable<any> {
+    return this.http.delete(API.concat(id.toString()), httpOptionsJson);
+  }
+
+  received(id: number): Observable<any> {
+    return this.getOne(id);
+  }
 }

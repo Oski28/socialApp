@@ -7,7 +7,7 @@
             <i class="input-group-text border-0 mdi mdi-magnify"></i>
           </div>
           <input type="text" class="form-control bg-transparent border-0 text-white"
-                 placeholder="Szukaj wydarzenia dla siebie" (input)="changeInput($event.target.value)">
+                 placeholder="Szukaj wydarzenia dla siebie" (input)="changeInput($event.target.value);">
         </div>
       </form>
       <form class="form-sample">
@@ -145,7 +145,7 @@
               Nazwa musi mieć co najmniej 1 znak
             </div>
             <div *ngIf="f.reason.errors.maxlength">
-              Nazwa musi mieć maksymalnie 100 znaków
+              Nazwa musi mieć maksymalnie 300 znaków
             </div>
           </div>
         </form>

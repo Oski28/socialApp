@@ -24,7 +24,6 @@ export class ShowNoticesComponent implements OnInit {
   getNotices() {
     this.noticeService.getAllForUser(this.currentPage.toString(), this.pageSize.toString()).subscribe(
       data => {
-        console.log(data);
         // @ts-ignore
         this.notices = data.content;
         // @ts-ignore
@@ -42,4 +41,23 @@ export class ShowNoticesComponent implements OnInit {
     this.getNotices();
   }
 
+  removeNotice(id: number) {
+    this.noticeService.remove(id).subscribe(
+      data => {
+        this.getNotices();
+      }, err => {
+        console.log(err);
+      }
+    )
+  }
+
+  setReceived(id: number) {
+    this.noticeService.received(id).subscribe(
+      data => {
+        this.getNotices();
+      }, err => {
+        console.log(err);
+      }
+    )
+  }
 }

@@ -42,7 +42,6 @@ export class ShowJoinedEventsComponent implements AfterViewInit {
     this.eventService.getAllForAuthUserParticipate(this.column, this.direction, this.input,
       this.currentPage.toString(), this.pageSize.toString(), this.activeDate).subscribe(
       data => {
-        console.log(data);
         this.events = data['content'];
         this.totalPages = data['totalPages']
         this.totalElements = data['totalElements']

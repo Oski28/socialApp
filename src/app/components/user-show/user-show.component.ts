@@ -3,8 +3,10 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {UserService} from '../../service/user.service';
 import {TokenStorageService} from '../../service/token-storage.service';
-import {AbstractControl, Form, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import ValidationService from '../../service/validation.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ReportService} from '../../service/report.service';
 
 @Component({
   selector: 'app-user-show',
@@ -34,9 +36,15 @@ export class UserShowComponent implements OnInit {
   isUserMod = false;
   isUserAdmin = false;
 
+  correctMessage = '';
+  errorMessage = '';
+  formReport!: FormGroup;
+  submittedReport = false;
+  userId = null;
+
   constructor(private  activatedRoute: ActivatedRoute, private userService: UserService,
               private sanitizer: DomSanitizer, private tokenService: TokenStorageService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder, private modalService: NgbModal, private reportService: ReportService) {
   }
 
   ngOnInit(): void {
@@ -81,6 +89,12 @@ export class UserShowComponent implements OnInit {
     this.formRole = this.formBuilder.group({
       role: new FormControl()
     })
+    this.formReport = this.formBuilder.group(
+      {
+        reason: ['', [Validators.required, Validators.minLength(1)
+          , Validators.maxLength(300)]]
+      }, {}
+    );
     this.formRole.controls.role.setValue('USER');
   }
 
@@ -108,6 +122,35 @@ export class UserShowComponent implements OnInit {
     }
   }
 
+  get fReport(): { [key: string]: AbstractControl } {
+    return this.formReport.controls;
+  }
+
+  onSubmitReport() {
+    this.submittedReport = true;
+    if (this.formReport.invalid || this.formReport.controls.reason.pristine) {
+      this.errorMessage = 'Nieprawidłowe dane by wysłać zgłoszenie';
+      this.correctMessage = '';
+      return;
+    } else {
+      this.modalService.dismissAll();
+      this.reportService.createForUser(this.formReport.controls.reason.value, this.userId).subscribe(
+        data => {
+          this.submittedReport = false;
+          this.formReport.reset();
+          this.correctMessage = 'Twoje zgłoszenie zostało wysłane administracji';
+          this.errorMessage = '';
+        },
+        err => {
+          this.submittedReport = false;
+          this.formReport.reset()
+          this.correctMessage = '';
+          this.errorMessage = err.error.message;
+        }
+      );
+    }
+  }
+
   unban() {
     this.userService.unban(this.id).subscribe(
       data => {
@@ -128,5 +171,14 @@ export class UserShowComponent implements OnInit {
         this.formRole.reset();
       }
     );
+  }
+
+  openModalReport(reportModal, userId: number) {
+    this.userId = userId;
+    this.modalService.open(reportModal);
+  }
+
+  openModalInfo(infoModal) {
+    this.modalService.open(infoModal);
   }
 }

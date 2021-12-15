@@ -12,10 +12,8 @@ import {SidebarComponent} from './shared/sidebar/sidebar.component';
 import {FooterComponent} from './shared/footer/footer.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TodoComponent} from './apps/todo-list/todo/todo.component';
 import {SpinnerComponent} from './shared/spinner/spinner.component';
 import {ContentAnimateDirective} from './shared/directives/content-animate.directive';
-import {TodoListComponent} from './apps/todo-list/todo-list.component';
 import {HomeComponent} from './components/home/home.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {DatePipe} from '@angular/common';
@@ -39,9 +37,12 @@ import {FindEventComponent} from './components/find-event/find-event.component';
 import {ShowMyEventsComponent} from './components/show-my-events/show-my-events.component';
 import {ShowJoinedEventsComponent} from './components/show-joined-events/show-joined-events.component';
 import {ShowRequestToJoinComponent} from './components/show-request-to-join/show-request-to-join.component';
-import { EditEventComponent } from './components/edit-event/edit-event.component';
-import { ShowNoticeComponent } from './components/show-notice/show-notice.component';
-import { ShowNoticesComponent } from './components/show-notices/show-notices.component';
+import {EditEventComponent} from './components/edit-event/edit-event.component';
+import {ShowNoticeComponent} from './components/show-notice/show-notice.component';
+import {ShowNoticesComponent} from './components/show-notices/show-notices.component';
+import {ShowReportComponent} from './components/show-report/show-report.component';
+import {ShowReportsComponent} from './components/show-reports/show-reports.component';
+import {ShowChatComponent} from './components/show-chat/show-chat.component';
 
 @NgModule({
   declarations: [
@@ -50,8 +51,6 @@ import { ShowNoticesComponent } from './components/show-notices/show-notices.com
     SidebarComponent,
     FooterComponent,
     DashboardComponent,
-    TodoListComponent,
-    TodoComponent,
     SpinnerComponent,
     ContentAnimateDirective,
     HomeComponent,
@@ -74,7 +73,10 @@ import { ShowNoticesComponent } from './components/show-notices/show-notices.com
     ShowRequestToJoinComponent,
     EditEventComponent,
     ShowNoticeComponent,
-    ShowNoticesComponent
+    ShowNoticesComponent,
+    ShowReportComponent,
+    ShowReportsComponent,
+    ShowChatComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +88,7 @@ import { ShowNoticesComponent } from './components/show-notices/show-notices.com
     ChartsModule,
     HttpClientModule,
     RxReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}, DatePipe, ThemeService],
   bootstrap: [AppComponent]

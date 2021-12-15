@@ -7,7 +7,7 @@ import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import ValidationService from '../../service/validation.service';
 import {AuthService} from '../../service/auth.service';
 import {Router} from '@angular/router';
-import {NavbarComponent} from '../../shared/navbar/navbar.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-profil',
@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
   guard = '';
   error = '';
 
-  private id: number;
+  id: number;
   username: string;
   avatar: SafeResourceUrl;
   firstname: string;
@@ -40,9 +40,13 @@ export class ProfileComponent implements OnInit {
   formPassword!: FormGroup
   submittedPassword = false;
 
+  form!: FormGroup;
+  submitted = false;
+  userId = null;
+
   constructor(private userService: UserService, private tokenService: TokenStorageService,
               private sanitizer: DomSanitizer, private formBuilder: FormBuilder, private authService: AuthService,
-              private router: Router) {
+              private router: Router, private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -203,5 +207,14 @@ export class ProfileComponent implements OnInit {
     this.tokenService.signOut();
     this.guard = 'Zmieniono dane logowania. Wymagane ponowne zalogowanie do serwisu';
     this.router.navigate(['signin', this.guard]);
+  }
+
+  removeAccount() {
+    this.userService.removeUser(this.tokenService.getUser().id).subscribe();
+    this.logout();
+  }
+
+  openModal(removeModalContent) {
+    this.modalService.open(removeModalContent);
   }
 }

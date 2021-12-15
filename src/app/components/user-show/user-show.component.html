@@ -122,14 +122,75 @@
             </div>
           </form>
         </div>
-        <button *ngIf="blocked && !isUserMod"
-                type="button"
-                (click)="unban()"
-                class="btn btn-warning btn-block"
-        >
-          Zakończ bana
-        </button>
+        <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+          <button *ngIf="blocked && !isUserMod"
+                  type="button"
+                  (click)="unban()"
+                  class="btn btn-warning btn-block"
+          >
+            Zakończ bana
+          </button>
+          <button type="button" (click)="openModalReport(reportModal, id);"
+                  class="btn btn-danger btn-block">Zgłoś
+            administracji
+          </button>
+        </div>
       </div>
     </div>
+    <ng-template #reportModal let-modal class="modal fade" id="reportModal" aria-labelledby="reportModal">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeModalLabel">Zgłoszenie </h5>
+          <button type="button" class="close" (click)="modal.dismiss();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="pt-3" [formGroup]="formReport" (ngSubmit)="onSubmitReport()">
+            <label for="reason">Powód zgłoszenia</label>
+            <textarea type="text" class="form-control form-control-sm" id="reason" formControlName="reason"
+                      name="reason" [ngClass]="{ 'is-invalid': submittedReport && fReport.reason.errors }"
+                      placeholder="Podaj powód" maxlength="300" minlength="1" style="min-height: 150px"></textarea>
+            <div class="invalid-feedback text-center text-white bg-info"
+                 *ngIf="fReport.reason.errors && submittedReport">
+              <div *ngIf="fReport.reason.errors.required">Nazwa jest wymagana</div>
+              <div *ngIf="fReport.reason.errors.minlength">
+                Nazwa musi mieć co najmniej 1 znak
+              </div>
+              <div *ngIf="fReport.reason.errors.maxlength">
+                Nazwa musi mieć maksymalnie 100 znaków
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="onSubmitReport(); openModalInfo(infoModal)">
+            Zgłoś
+          </button>
+          <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #infoModal let-modal class="modal fade" id="infoModal" aria-labelledby="infoModal">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">Informacja</h5>
+          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
+            Błąd: {{errorMessage}}
+          </div>
+          <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
+            {{correctMessage}}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="modal.close()">Zamknij</button>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div>

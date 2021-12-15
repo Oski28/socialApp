@@ -23,6 +23,9 @@ import {ShowRequestToJoinComponent} from './components/show-request-to-join/show
 import {EditEventComponent} from './components/edit-event/edit-event.component';
 import {ShowNoticeComponent} from './components/show-notice/show-notice.component';
 import {ShowNoticesComponent} from './components/show-notices/show-notices.component';
+import {ShowReportComponent} from './components/show-report/show-report.component';
+import {ShowReportsComponent} from './components/show-reports/show-reports.component';
+import {ShowChatComponent} from './components/show-chat/show-chat.component';
 
 
 const routes: Routes = [
@@ -40,26 +43,20 @@ const routes: Routes = [
   {path: 'userShow/:id', component: UserShowComponent},
   {path: 'editEvent/:id', component: EditEventComponent},
   {path: 'notice/:id', component: ShowNoticeComponent},
+  {path: 'report/:id', component: ShowReportComponent},
+  {path: 'chat/:id', component: ShowChatComponent},
   {path: 'findUser', component: FindUserComponent},
   {path: 'addUser', component: CreateUserComponent},
   {path: 'addCategory', component: AddCategoryComponent},
   {path: 'showCategories', component: ShowCategoriesComponent},
   {path: 'noticesShow', component: ShowNoticesComponent},
+  {path: 'reportsShow', component: ShowReportsComponent},
   {path: 'addEvent', component: AddEventComponent},
   {path: 'findEvent', component: FindEventComponent},
   {path: 'showMyEvents', component: ShowMyEventsComponent},
   {path: 'showJoined', component: ShowJoinedEventsComponent},
   {path: 'showRequest', component: ShowRequestToJoinComponent},
   {path: '**', component: NotFoundComponent},
-  {path: 'basic-ui', loadChildren: () => import('./basic-ui/basic-ui.module').then(m => m.BasicUiModule)},
-  {path: 'charts', loadChildren: () => import('./charts/charts.module').then(m => m.ChartsDemoModule)},
-  {path: 'forms', loadChildren: () => import('./forms/form.module').then(m => m.FormModule)},
-  {path: 'tables', loadChildren: () => import('./tables/tables.module').then(m => m.TablesModule)},
-  {path: 'icons', loadChildren: () => import('./icons/icons.module').then(m => m.IconsModule)},
-  {path: 'general-pages', loadChildren: () => import('./general-pages/general-pages.module').then(m => m.GeneralPagesModule)},
-  {path: 'apps', loadChildren: () => import('./apps/apps.module').then(m => m.AppsModule)},
-  {path: 'user-pages', loadChildren: () => import('./user-pages/user-pages.module').then(m => m.UserPagesModule)},
-  {path: 'error-pages', loadChildren: () => import('./error-pages/error-pages.module').then(m => m.ErrorPagesModule)},
 ];
 
 @NgModule({

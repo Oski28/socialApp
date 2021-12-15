@@ -3,15 +3,15 @@
   <div class="card">
     <div class="card-body text-center" style="background-color: whitesmoke; padding: 10px;" *ngIf="notice.received">
       {{notice.content}}
-      <i class="mdi mdi-folder-remove"></i>
+      <i class="mdi mdi-calendar-remove" style="float: right;" (click)="removeNotice(notice.id);"></i>
     </div>
     <div class="card-body text-center" style="background-color: lightgray; padding: 20px;" *ngIf="!notice.received">
       {{notice.content}}
-      <div class="form-group col-6 mx-auto" style="margin-top: 10px; margin-bottom: 0px;">
+      <i class="mdi mdi-calendar-remove" style="float: right;" (click)="removeNotice(notice.id);"></i>
+      <div class="form-group col-8 mx-auto" style="margin-top: 10px; margin-bottom: 0px;">
         <button (click)="setReceived(notice.id);" class="btn btn-info btn-block">Oznacz jako przeczytane
         </button>
       </div>
-      <i class="mdi mdi-folder-remove"></i>
     </div>
   </div>
 </div>

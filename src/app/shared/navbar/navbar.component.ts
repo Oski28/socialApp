@@ -1,11 +1,12 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {NgbDropdownConfig, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AfterViewInit, Component, Input} from '@angular/core';
+import {NgbDropdownConfig} from '@ng-bootstrap/ng-bootstrap';
 import {TokenStorageService} from '../../service/token-storage.service';
 import {AuthService} from '../../service/auth.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {UserService} from '../../service/user.service';
 import {NoticeService} from '../../service/notice.service';
+import {ReportService} from '../../service/report.service';
 
 @Component({
   selector: 'app-navbar',
@@ -22,11 +23,11 @@ export class NavbarComponent implements AfterViewInit {
   avatar: SafeResourceUrl;
 
   notices: any[];
+  reports: any[];
 
   constructor(config: NgbDropdownConfig, private tokenService: TokenStorageService,
               private authService: AuthService, private router: Router, private sanitizer: DomSanitizer,
-              private userService: UserService, private modalService: NgbModal,
-              private noticeService: NoticeService) {
+              private userService: UserService, private noticeService: NoticeService, private reportService: ReportService) {
     config.placement = 'bottom-right';
   }
 
@@ -53,6 +54,13 @@ export class NavbarComponent implements AfterViewInit {
           this.noticeService.getAllNotReceived().subscribe(
             data => {
               this.notices = data.content;
+            }
+          )
+        }
+        if (this.isMod) {
+          this.reportService.getAllNotReceived().subscribe(
+            data => {
+              this.reports = data.content;
             }
           )
         }
@@ -107,13 +115,4 @@ export class NavbarComponent implements AfterViewInit {
 // toggleRightSidebar() {
 //   document.querySelector('#right-sidebar').classList.toggle('open');
 // }
-
-  removeAccount() {
-    this.userService.removeUser(this.tokenService.getUser().id).subscribe();
-    this.logout();
-  }
-
-  openModal(removeModalContent) {
-    this.modalService.open(removeModalContent);
-  }
 }

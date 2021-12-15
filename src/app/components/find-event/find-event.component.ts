@@ -159,6 +159,8 @@ export class FindEventComponent implements AfterViewInit {
   onSubmit() {
     this.submitted = true;
     if (this.form.invalid || this.form.controls.reason.pristine) {
+      this.errorMessage = 'Nieprawidłowe dane by wysłać zgłoszenie';
+      this.correctMessage = '';
       return;
     } else {
       this.modalService.dismissAll();
