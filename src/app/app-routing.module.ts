@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {DashboardComponent} from './dashboard/dashboard.component';
 import {HomeComponent} from './components/home/home.component';
 import {AboutComponent} from './components/about/about.component';
 import {FaqComponent} from './components/faq/faq.component';
@@ -26,6 +25,8 @@ import {ShowNoticesComponent} from './components/show-notices/show-notices.compo
 import {ShowReportComponent} from './components/show-report/show-report.component';
 import {ShowReportsComponent} from './components/show-reports/show-reports.component';
 import {ShowChatComponent} from './components/show-chat/show-chat.component';
+import {ShowChatsComponent} from './components/show-chats/show-chats.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,7 @@ const routes: Routes = [
   {path: 'terms', component: TermsComponent},
   {path: 'signin', component: SigninComponent},
   {path: 'profil', component: ProfileComponent},
+  {path: 'chats', component: ShowChatsComponent},
   {path: 'signin/:guard', component: SigninComponent},
   {path: 'userShow/:id', component: UserShowComponent},
   {path: 'editEvent/:id', component: EditEventComponent},

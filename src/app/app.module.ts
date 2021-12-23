@@ -10,7 +10,7 @@ import {AppComponent} from './app.component';
 import {NavbarComponent} from './shared/navbar/navbar.component';
 import {SidebarComponent} from './shared/sidebar/sidebar.component';
 import {FooterComponent} from './shared/footer/footer.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SpinnerComponent} from './shared/spinner/spinner.component';
 import {ContentAnimateDirective} from './shared/directives/content-animate.directive';
@@ -43,6 +43,7 @@ import {ShowNoticesComponent} from './components/show-notices/show-notices.compo
 import {ShowReportComponent} from './components/show-report/show-report.component';
 import {ShowReportsComponent} from './components/show-reports/show-reports.component';
 import {ShowChatComponent} from './components/show-chat/show-chat.component';
+import { ShowChatsComponent } from './components/show-chats/show-chats.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import {ShowChatComponent} from './components/show-chat/show-chat.component';
     ShowNoticesComponent,
     ShowReportComponent,
     ShowReportsComponent,
-    ShowChatComponent
+    ShowChatComponent,
+    ShowChatsComponent
   ],
   imports: [
     BrowserModule,

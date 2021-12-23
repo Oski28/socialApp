@@ -21,8 +21,8 @@ export class MessageService {
       .pipe(first());
   }
 
-  save(content: string, file: string, id: number, userId: number) {
-    return this.socketClient.send(`/topic/chat/${id}`, {content, file, userId});
+  save(content: string, file: string, fileName: string, id: number, userId: number) {
+    return this.socketClient.send(`/topic/chat/${id}`, {content, file, fileName, userId});
   }
 
   onPost(id: number): Observable<any> {
@@ -39,5 +39,13 @@ export class MessageService {
 
   delete(id: number): Observable<any> {
     return this.http.delete(API.concat(id.toString()), httpOptionsJson);
+  }
+
+  downloadFile(file: string | undefined): Observable<Blob> {
+    return this.http.get(file, {responseType: 'blob'});
+  }
+
+  getFileName(path: string): Observable<any> {
+    return this.http.get(path, {responseType: 'text'});
   }
 }

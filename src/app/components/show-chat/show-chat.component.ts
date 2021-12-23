@@ -7,6 +7,9 @@ import {TokenStorageService} from '../../service/token-storage.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {saveAs} from 'file-saver';
+import {RxwebValidators} from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-show-chat',
@@ -19,6 +22,7 @@ export class ShowChatComponent implements OnInit, OnDestroy {
   empty = false;
 
   chatId: number;
+  chat: any;
   messages = [];
   page = 0;
 
@@ -29,42 +33,61 @@ export class ShowChatComponent implements OnInit, OnDestroy {
 
   audio = new Audio('assets\\sounds\\message_sound.mp3');
 
+  formEdit!: FormGroup;
+  submittedEdit = false;
+  fileName = null;
+
   private unsubscribeSubject: Subject<void> = new Subject<void>();
 
   constructor(private  activatedRoute: ActivatedRoute, private messageService: MessageService,
               private sanitizer: DomSanitizer, private chatService: ChatService,
-              private tokenService: TokenStorageService, private formBuilder: FormBuilder) {
+              private tokenService: TokenStorageService, private formBuilder: FormBuilder,
+              private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: Params) => this.chatId = params.id);
     this.userId = this.tokenService.getUser().id;
     this.getMessages();
-    /* this.messageService
-       .findAll('28', this.chatId)
-       .subscribe(messages => {
-         console.log(messages)
-         this.mess = messages
-       });*/
+    this.chatService.getOne(this.chatId).subscribe(
+      data => {
+        this.chat = data;
+      }, err => {
+        console.log(err);
+      }
+    )
     this.messageService
       .onPost(this.chatId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(message => {
         this.prepareDate([message]);
+        this.prepareAvatar([message]);
+        this.prepareFile([message]);
         this.messages.push(message);
-        this.audio.play();
-
+        if (message.senderId !== this.userId) {
+          this.audio.play();
+        }
       });
     this.form = this.formBuilder.group({
-      file: ['', []],
+      file: ['', [RxwebValidators.fileSize({maxSize: 12000000})]],
       message: ['', [Validators.required, Validators.maxLength(300)]]
     }, {});
+    this.formEdit = this.formBuilder.group(
+      {
+        name: ['', [Validators.required, Validators.minLength(3)
+          , Validators.maxLength(50)]]
+      }, {}
+    );
+    this.form.controls.file.setValue(null);
   }
 
   onReset(): void {
     this.submitted = false;
     this.form.reset();
     this.fileInput.nativeElement.value = '';
+    this.submittedEdit = false;
+    this.formEdit.reset();
+    this.modalService.dismissAll();
   }
 
   ngOnDestroy(): void {
@@ -76,6 +99,7 @@ export class ShowChatComponent implements OnInit, OnDestroy {
     this.messageService.getAll(this.page.toString(), this.chatId).subscribe(
       data => {
         this.messages = data.content;
+        this.prepareFile(this.messages);
         this.prepareAvatar(this.messages);
         this.prepareDate(this.messages);
       }, err => {
@@ -150,11 +174,16 @@ export class ShowChatComponent implements OnInit, OnDestroy {
       reader.addEventListener('load', setFile.bind(this), false);
 
       reader.readAsDataURL(file.files[0]);
+      this.fileName = file.files[0].name;
     }
   }
 
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
+  }
+
+  get fEdit(): { [key: string]: AbstractControl } {
+    return this.formEdit.controls;
   }
 
   onSubmit() {
@@ -163,8 +192,50 @@ export class ShowChatComponent implements OnInit, OnDestroy {
       return;
     } else {
       this.bothNull = false;
-      this.messageService.save(this.form.controls.message.value, this.form.controls.file.value, this.chatId, this.userId);
+      this.messageService.save(this.form.controls.message.value, this.form.controls.file.value, this.fileName, this.chatId, this.userId);
       this.onReset();
     }
+  }
+
+  openModalEdit(editChatName) {
+    this.modalService.open(editChatName);
+  }
+
+  onSubmitEdit() {
+    this.submittedEdit = true;
+    if (this.formEdit.invalid || this.formEdit.controls.name.pristine) {
+      return;
+    } else {
+      this.chatService.editName(this.formEdit.controls.name.value, this.chat.id).subscribe(
+        data => {
+          this.ngOnInit();
+        }, err => {
+          console.log(err);
+        }
+      );
+      this.onReset();
+    }
+  }
+
+  private prepareFile(messages: any[]) {
+    messages.forEach(message => {
+      if (!message.fileToDownload && message.file !== null) {
+        message.file = this.sanitizer
+          .bypassSecurityTrustResourceUrl('' + message.file.substr(0, message.file.indexOf(',') + 1)
+            + message.file.substr(message.file.indexOf(',') + 1));
+      }
+    })
+  }
+
+  downloadFile(file: any) {
+    this.messageService.downloadFile(file).subscribe(blob => {
+      this.messageService.getFileName(file.concat('/name')).subscribe(
+        data => {
+          saveAs(blob, data);
+        }, error => {
+          console.log(error)
+        }
+      );
+    });
   }
 }
