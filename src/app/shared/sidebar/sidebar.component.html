@@ -19,7 +19,7 @@
         <i class="mdi mdi-home menu-icon "></i>
       </a>
     </li>
-    <li class="nav-item" [ngClass]="{ 'active': findUsers.isActive }" *ngIf="isMod">
+    <li class="nav-item" [ngClass]="{ 'active': findUsers.isActive }" *ngIf="isUser">
       <a class="nav-link" routerLink="/findUser" routerLinkActive #findUsers="routerLinkActive">
         <span class="menu-title">Szukaj użytkowników</span>
         <i class="mdi mdi-account-search menu-icon"></i>

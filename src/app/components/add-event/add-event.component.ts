@@ -79,7 +79,10 @@ export class AddEventComponent implements OnInit {
     this.form.reset();
   }
 
-  changeAgeLimit(value: number) {
+  changeAgeLimit(value: any) {
+    if (value === 'Brak') {
+      value = null;
+    }
     this.ageLimit = value;
   }
 

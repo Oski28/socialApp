@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {UserService} from '../../service/user.service';
 import {TokenStorageService} from '../../service/token-storage.service';
@@ -7,6 +7,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '
 import ValidationService from '../../service/validation.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportService} from '../../service/report.service';
+import {ChatService} from '../../service/chat.service';
 
 @Component({
   selector: 'app-user-show',
@@ -44,7 +45,9 @@ export class UserShowComponent implements OnInit {
 
   constructor(private  activatedRoute: ActivatedRoute, private userService: UserService,
               private sanitizer: DomSanitizer, private tokenService: TokenStorageService,
-              private formBuilder: FormBuilder, private modalService: NgbModal, private reportService: ReportService) {
+              private formBuilder: FormBuilder, private modalService: NgbModal,
+              private reportService: ReportService, private chatService: ChatService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -180,5 +183,15 @@ export class UserShowComponent implements OnInit {
 
   openModalInfo(infoModal) {
     this.modalService.open(infoModal);
+  }
+
+  createChatIfNotExist() {
+    this.chatService.create(this.id).subscribe(
+      response => {
+        this.router.navigate(['chat/'.concat(response.toString())]);
+      }, error => {
+        console.log(error);
+      }
+    )
   }
 }

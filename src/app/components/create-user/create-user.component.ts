@@ -59,7 +59,7 @@ export class CreateUserComponent implements OnInit {
     if (this.form.invalid || this.form.controls.firstname.pristine || this.form.controls.lastname.pristine ||
       this.form.controls.username.pristine || this.form.controls.email.pristine ||
       this.form.controls.password.pristine || this.form.controls.dateOfBirth.pristine ||
-      this.form.controls.confirmPassword.pristine ) {
+      this.form.controls.confirmPassword.pristine) {
       return;
     } else {
       this.userService.create(this.form.controls.avatar.value, this.form.controls.firstname.value,
@@ -67,6 +67,7 @@ export class CreateUserComponent implements OnInit {
         this.form.controls.email.value, this.form.controls.password.value, this.form.controls.dateOfBirth.value,
         this.form.controls.role.value).subscribe(
         data => {
+          console.log(data)
           this.isSuccessful = true;
           this.isCreateFailed = false;
           this.onReset();

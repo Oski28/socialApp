@@ -14,22 +14,38 @@
           <div class="incoming_msg_img"><img [src]="message.avatar" alt="sunil"></div>
           <div class="received_msg">
             <div class="received_withd_msg">
-              <div *ngIf="message.deleteDate === null">{{message.content}}</div>
-              <div *ngIf="message.deleteDate === null  && message.fileToDownload"><a href="{{message.file}}" style="color: white">Załącznik</a></div>
-              <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img [src]="message.file" alt="sunil"></div>
-              <div *ngIf="message.deleteDate !== null">Wiadomość usunięta</div>
-              <span class="time_date mb-1">{{message.writeDate}}</span></div>
+              <blockquote class="blockquote blockquote-info">
+                <div *ngIf="message.deleteDate === null">{{message.content}}</div>
+                <div *ngIf="message.deleteDate === null  && message.fileToDownload">
+                  <button (click)="downloadFile(message.file)" class="btn btn-success btn-block" style="color: white">
+                    Załącznik
+                  </button>
+                </div>
+                <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img
+                  [src]="message.file" alt="sunil"></div>
+                <div *ngIf="message.deleteDate !== null">Wiadomość usunięta</div>
+                <span class="time_date mb-1">{{message.writeDate}} - {{message.senderUsername}}</span>
+              </blockquote>
+            </div>
           </div>
         </div>
         <div class="outgoing_msg" *ngIf="message.senderId === userId">
           <div class="sent_msg">
-            <div *ngIf="message.deleteDate === null"><i class="mdi mdi-calendar-remove"
-                                                        style="float: right;"
-                                                        (click)="removeMessage(message.id);"></i>{{message.content}}</div>
-            <div *ngIf="message.deleteDate === null  && message.fileToDownload"><button (click)="downloadFile(message.file)" style="color: white">Załącznik</button></div>
-            <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img [src]="message.file" alt="sunil"></div>
-            <div *ngIf="message.deleteDate !== null">Wiadomość usunięta {{message.deleteDate}}</div>
-            <span class="time_date">{{message.writeDate}}</span></div>
+            <blockquote class="blockquote blockquote-info">
+              <div *ngIf="message.deleteDate === null"><i class="mdi mdi-calendar-remove"
+                                                          style="float: right;"
+                                                          (click)="removeMessage(message.id);"></i>{{message.content}}
+              </div>
+              <div *ngIf="message.deleteDate === null  && message.fileToDownload">
+                <button (click)="downloadFile(message.file)" class="btn btn-success btn-block" style="color: white">
+                  Załącznik
+                </button>
+              </div>
+              <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img
+                [src]="message.file" alt="sunil"></div>
+              <div *ngIf="message.deleteDate !== null">Wiadomość usunięta {{message.deleteDate}}</div>
+              <span class="time_date">{{message.writeDate}}</span></blockquote>
+          </div>
         </div>
       </div>
     </div>
@@ -64,7 +80,7 @@
             />
             <div class="invalid-feedback text-white text-center bg-info"
                  *ngIf="f.file.errors && submitted">
-              <div *ngIf="f.file.errors.fileSize">Plik może mieć max 12 MB</div>
+              <div *ngIf="f.file.errors.fileSize">Plik może mieć max 3 MB</div>
             </div>
           </div>
           <button class="btn btn-dark btn-block mb-2" style="width: 75%; margin-left: auto; margin-right: auto;">
@@ -87,8 +103,8 @@
       <form class="pt-3" [formGroup]="formEdit" (ngSubmit)="onSubmitEdit()">
         <label for="name">Nazwa czatu:</label>
         <input type="text" class="form-control form-control-sm" id="name" formControlName="name"
-                  name="name" [ngClass]="{ 'is-invalid': submittedEdit && fEdit.reason.errors }"
-                  placeholder="Podaj nazwe" maxlength="50" minlength="3"/>
+               name="name" [ngClass]="{ 'is-invalid': submittedEdit && fEdit.reason.errors }"
+               placeholder="Podaj nazwe" maxlength="50" minlength="3"/>
         <div class="invalid-feedback text-center text-white bg-info" *ngIf="fEdit.name.errors && submittedEdit">
           <div *ngIf="fEdit.name.errors.required">Nazwa jest wymagana</div>
           <div *ngIf="fEdit.name.errors.minlength">
@@ -102,7 +118,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-success" (click)="onSubmitEdit();">
-       Zmień nazwe
+        Zmień nazwe
       </button>
       <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
     </div>

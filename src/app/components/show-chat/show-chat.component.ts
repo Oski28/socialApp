@@ -69,7 +69,7 @@ export class ShowChatComponent implements OnInit, OnDestroy {
         }
       });
     this.form = this.formBuilder.group({
-      file: ['', [RxwebValidators.fileSize({maxSize: 12000000})]],
+      file: ['', [RxwebValidators.fileSize({maxSize: 3100000})]],
       message: ['', [Validators.required, Validators.maxLength(300)]]
     }, {});
     this.formEdit = this.formBuilder.group(

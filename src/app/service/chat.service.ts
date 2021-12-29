@@ -29,4 +29,8 @@ export class ChatService {
     };
     return this.http.get(API, httpOptions);
   }
+
+  create(userId: number): Observable<any> {
+    return this.http.post(API, {userId}, httpOptionsJson);
+  }
 }
