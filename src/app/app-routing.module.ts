@@ -27,6 +27,7 @@ import {ShowReportsComponent} from './components/show-reports/show-reports.compo
 import {ShowChatComponent} from './components/show-chat/show-chat.component';
 import {ShowChatsComponent} from './components/show-chats/show-chats.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {ShowEventComponent} from './components/show-event/show-event.component';
 
 
 const routes: Routes = [
@@ -45,6 +46,7 @@ const routes: Routes = [
   {path: 'userShow/:id', component: UserShowComponent},
   {path: 'editEvent/:id', component: EditEventComponent},
   {path: 'notice/:id', component: ShowNoticeComponent},
+  {path: 'event/:id', component: ShowEventComponent},
   {path: 'report/:id', component: ShowReportComponent},
   {path: 'chat/:id', component: ShowChatComponent},
   {path: 'findUser', component: FindUserComponent},

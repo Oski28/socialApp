@@ -11,6 +11,7 @@ export class ShowReportComponent implements OnInit {
 
   id: number = null;
   userId: number = null;
+  eventId: number = null;
   date: string = null;
   time: string = null;
   reason: string = null;
@@ -27,10 +28,12 @@ export class ShowReportComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: Params) => this.id = params.id);
     this.reportService.getOne(this.id).subscribe(
       data => {
+        console.log(data);
         this.reason = data.reason;
         this.date = data.addDate.substr(0, 10);
         this.time = data.addDate.substr(11, 5);
         this.userId = data.userId;
+        this.eventId = data.eventId;
       }, err => {
         console.log(err);
         this.reason = err.error.message;

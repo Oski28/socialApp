@@ -119,6 +119,10 @@
                     <button class="btn btn-info btn-block mb-2">Przejdź do czatu
                     </button>
                   </a>
+                  <a routerLink="/event/{{event.id}}">
+                    <button class="btn btn-primary btn-block mb-2">Podgląd wydarzenia
+                    </button>
+                  </a>
                   <button class="btn btn-danger btn-block mb-2"
                           (click)="openModalDivorce(divorceModalContent, event.name, event.id)">Opuść wydarzenie
                   </button>
@@ -133,13 +137,13 @@
   <ng-template #divorceModalContent let-modal class="modal fade" id="removeModal" aria-labelledby="removeModal">
     <div class="modal-content bg-danger">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeModalLabel">Opuszczanie wydarzenia</h5>
+        <h5 class="modal-title" id="divorceModalLabel">Opuszczanie wydarzenia</h5>
         <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>Czy na pewno chcesz opuścić wydarzenie {{removeName}}?</p>
+        <p>Czy na pewno chcesz opuścić wydarzenie {{divorceName}}?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="divorceEvent(); modal.close(); openModalInfo(infoModal)">

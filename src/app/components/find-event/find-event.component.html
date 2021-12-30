@@ -113,6 +113,10 @@
                     prośbę
                     o dołączenie
                   </button>
+                  <a routerLink="/event/{{event.id}}">
+                    <button class="btn btn-primary btn-block mb-2">Podgląd wydarzenia
+                    </button>
+                  </a>
                   <button type="button" (click)="openModalReport(reportModal, event.id, event.organizerId)"
                           class="btn btn-danger btn-block">Zgłoś
                     administracji

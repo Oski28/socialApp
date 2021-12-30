@@ -24,8 +24,8 @@ export class ShowJoinedEventsComponent implements AfterViewInit {
   correctMessage = '';
   errorMessage = '';
 
-  removeName = '';
-  removeId = null;
+  divorceName = '';
+  divorceId = null;
 
   constructor(private eventService: EventService, private modalService: NgbModal,
               private tokenService: TokenStorageService) {
@@ -112,13 +112,13 @@ export class ShowJoinedEventsComponent implements AfterViewInit {
   }
 
   openModalDivorce(divorceModalContent, name: string, id: string) {
-    this.removeName = name;
-    this.removeId = id;
+    this.divorceName = name;
+    this.divorceId = id;
     this.modalService.open(divorceModalContent);
   }
 
   divorceEvent() {
-    this.eventService.divorce(this.removeId).subscribe(
+    this.eventService.divorce(this.divorceId).subscribe(
       data => {
         this.correctMessage = 'Opuściłeś wydarzenie';
         this.errorMessage = '';

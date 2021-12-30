@@ -1,0 +1,297 @@
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row mt-3">
+          <div class="col-lg-12 pr-1">
+            <div class="card">
+              <div class="card-body" style="padding: 0;">
+                <h4 class="card-title">Dane wydarzenia</h4>
+                <table class="table mb-0">
+                  <tbody>
+                  <tr>
+                    <td class="pl-0">Nazwa</td>
+                    <td class="text-right">
+                      {{name}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Opis</td>
+                    <td class="text-right">
+                      {{description}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Limit wiekowy</td>
+                    <td class="text-right">
+                      {{ageLimit ? ageLimit : 'Brak ograniczeń'}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Maksymalna liczba uczestników</td>
+                    <td class="text-right">
+                      {{maxNumber ? maxNumber : 'Brak ograniczeń'}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Aktualnie dołączyło</td>
+                    <td class="text-right">
+                      {{users.length}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Data i godzina</td>
+                    <td class="text-right">
+                      {{date.substr(0, 10).concat(' ').concat(date.substr(11, 5))}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Wolny dostęp</td>
+                    <td class="text-right">
+                      {{freeJoin ? 'Tak' : 'Nie'}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Lokalizacja</td>
+                    <td class="text-right">
+                      {{location}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Kategorie</td>
+                    <td class="text-left">
+                      <li *ngFor="let category of categories">{{category}}</li>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Organizator</td>
+                    <td class="text-right">
+                      {{organizer}}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h4 class="card-title mt-4">Uczestnicy wydarzenia</h4>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>
+                Avatar
+              </th>
+              <th>
+                Imie
+              </th>
+              <th>
+                Nazwisko
+              </th>
+              <th>
+                Nazwa użytkownika
+              </th>
+              <th>
+                Email
+              </th>
+              <th>
+                Data urodzenia
+              </th>
+              <th>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let user of users">
+              <td class="py-1">
+                <img [src]="user.avatar" alt="image"/>
+              </td>
+              <td>
+                {{user.firstname}}
+              </td>
+              <td>
+                {{user.lastname}}
+              </td>
+              <td>
+                <a routerLink="/userShow/{{user.id}}" style="color: orangered">{{user.username}}</a>
+              </td>
+              <td>
+                {{user.email}}
+              </td>
+              <td>
+                {{user.dateOfBirth}}
+              </td>
+              <td>
+                <button type="button" class="btn btn-gradient-info btn-rounded btn-fw"
+                        (click)="message(user.id)">
+                  Napisz wiadomość
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-body" *ngIf="users.length > pageSizeUsers">
+          <ngb-pagination (pageChange)="loadPageUsers($event)" [collectionSize]="totalElementsUsers"
+                          [pageSize]="pageSizeUsers"
+                          [page]="currentPageUsers+1" aria-label="user pagination"
+                          class="d-flex justify-content-center pagination-success"></ngb-pagination>
+        </div>
+        <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+          <button *ngIf="!isOrganizer"
+                  type="button"
+                  (click)="message(organizerId)"
+                  class="btn btn-info btn-block"
+          >
+            Napisz do organizatora
+          </button>
+          <button *ngIf="!isParticipant && freeJoin"
+                  type="button"
+                  (click)="join(id); openModalInfo(infoModal)"
+                  class="btn btn-success btn-block"
+          >
+            Dołącz
+          </button>
+          <button *ngIf="!isParticipant && !freeJoin"
+                  type="button"
+                  (click)="requestToJoin(id); openModalInfo(infoModal)"
+                  class="btn btn-primary btn-block"
+          >
+            Wyślij prośbę o dołączenie
+          </button>
+          <button *ngIf="!isParticipant"
+                  type="button"
+                  (click)="openModalReport(reportModal, id, organizerId)"
+                  class="btn btn-danger btn-block"
+          >
+            Zgłoś administracji
+          </button>
+          <button *ngIf="isParticipant"
+                  type="button"
+                  (click)="chat(chatId)"
+                  class="btn btn-info btn-block"
+          >
+            Przejdź do czatu
+          </button>
+          <button *ngIf="isOrganizer || isMod"
+                  type="button"
+                  (click)="edit()"
+                  class="btn btn-warning btn-block"
+          >
+            Zarządzaj wydarzeniem
+          </button>
+          <button *ngIf="isOrganizer || isMod"
+                  type="button"
+                  (click)="openModalRemove(removeModalContent, name, id)"
+                  class="btn btn-dark btn-block"
+          >
+            Usuń
+          </button>
+          <button *ngIf="isParticipant && !isOrganizer"
+                  type="button"
+                  (click)="openModalDivorce(divorceModalContent, name, id.toString())"
+                  class="btn btn-danger btn-block"
+          >
+            Opuść wydarzenie
+          </button>
+        </div>
+      </div>
+    </div>
+    <ng-template #divorceModalContent let-modal class="modal fade" id="divorceModal" aria-labelledby="divorceModal">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h5 class="modal-title" id="divorceModalLabel">Opuszczanie wydarzenia</h5>
+          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Czy na pewno chcesz opuścić wydarzenie {{removeName}}?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success"
+                  (click)="divorceEvent(); modal.close(); openModalInfo(infoModal)">
+            Opuść
+          </button>
+          <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #removeModalContent let-modal class="modal fade" id="removeModal" aria-labelledby="removeModal">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeModalLabel">Usuwanie wydarzenia</h5>
+          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Czy na pewno chcesz usunąć wydarzenie {{removeName}}?</p>
+          <p>Wszystkie dane wydarzenia zostaną utracone bezpowrotnie w tym chat dla tego wydarzenia.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success"
+                  (click)="removeEvent(); modal.close(); openModalInfo(infoModal)">
+            Usuń
+          </button>
+          <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #reportModal let-modal class="modal fade" id="reportModal" aria-labelledby="reportModal">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reportModalLabel">Zgłoszenie </h5>
+          <button type="button" class="close" (click)="modal.dismiss();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+            <label for="reason">Powód zgłoszenia</label>
+            <textarea type="text" class="form-control form-control-sm" id="reason" formControlName="reason"
+                      name="reason" [ngClass]="{ 'is-invalid': submitted && f.reason.errors }"
+                      placeholder="Podaj powód" maxlength="300" minlength="1" style="min-height: 150px"></textarea>
+            <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.reason.errors && submitted">
+              <div *ngIf="f.reason.errors.required">Nazwa jest wymagana</div>
+              <div *ngIf="f.reason.errors.minlength">
+                Nazwa musi mieć co najmniej 1 znak
+              </div>
+              <div *ngIf="f.reason.errors.maxlength">
+                Nazwa musi mieć maksymalnie 300 znaków
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="onSubmit(); openModalInfo(infoModal)">
+            Zgłoś
+          </button>
+          <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #infoModal let-modal class="modal fade" id="infoModal" aria-labelledby="infoModal">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">Informacja</h5>
+          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
+            Błąd: {{errorMessage}}
+          </div>
+          <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
+            {{correctMessage}}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="modal.close()">Zamknij</button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

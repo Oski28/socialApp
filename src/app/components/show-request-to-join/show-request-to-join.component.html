@@ -71,7 +71,7 @@
           <tbody>
           <tr *ngFor="let req of request">
             <td class="py-1">
-              <a routerLink="/eventShow/{{req.eventId}}" style="color: orangered"> {{req.eventName}}</a>
+              <a routerLink="/event/{{req.eventId}}" style="color: orangered"> {{req.eventName}}</a>
             </td>
             <td>
               {{req.date.substr(0, 10)}}, {{req.date.substr(11, 5)}}
