@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {EventService} from '../../service/event.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -8,6 +8,8 @@ import ValidationService from '../../service/validation.service';
 import {CategoryService} from '../../service/category.service';
 import {RequestToJoinService} from '../../service/request-to-join.service';
 import {UserService} from '../../service/user.service';
+import {TokenStorageService} from '../../service/token-storage.service';
+import {AuthService} from '../../service/auth.service';
 
 @Component({
   selector: 'app-edit-event',
@@ -62,7 +64,8 @@ export class EditEventComponent implements OnInit {
   constructor(private  activatedRoute: ActivatedRoute, private eventService: EventService,
               private modalService: NgbModal, private sanitizer: DomSanitizer, private formBuilder: FormBuilder,
               private categoryService: CategoryService, private requestToJoinService: RequestToJoinService,
-              private userService: UserService) {
+              private userService: UserService, private tokenService: TokenStorageService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -103,6 +106,9 @@ export class EditEventComponent implements OnInit {
   getEvent() {
     this.eventService.getOne(this.id).subscribe(
       data => {
+        if (data.organizerId !== this.tokenService.getUser().id && !this.tokenService.isMod()) {
+          this.router.navigate(['forbidden']);
+        }
         this.name = data.name;
         this.ageLimit = data.ageLimit;
         this.maxUsers = data.maxNumberOfParticipant;

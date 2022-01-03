@@ -37,6 +37,8 @@ export class ShowChatComponent implements OnInit, OnDestroy {
   submittedEdit = false;
   fileName = null;
 
+  error = '';
+
   private unsubscribeSubject: Subject<void> = new Subject<void>();
 
   constructor(private  activatedRoute: ActivatedRoute, private messageService: MessageService,
@@ -53,6 +55,7 @@ export class ShowChatComponent implements OnInit, OnDestroy {
       data => {
         this.chat = data;
       }, err => {
+        this.error = 'Brak uprawień do pobrania danych czatu o id' + this.chatId;
         console.log(err);
       }
     )

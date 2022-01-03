@@ -28,7 +28,7 @@ export class ShowNoticeComponent implements OnInit {
         this.content = data.content;
       }, err => {
         console.log(err);
-        this.content = err.error.message;
+        this.content = 'Brak uprawień do pobrania powiadomienia o id ' + this.id;
       }
     )
   }

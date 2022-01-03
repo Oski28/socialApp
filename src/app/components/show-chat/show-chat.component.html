@@ -6,6 +6,8 @@
     <div #scroll [scrollTop]="top ? scroll.scrollHeight : 1" (scroll)="loadData(scroll)"
          class="msg_history">
       <p class="text-center" style="color: orangered" *ngIf="empty">Dotarłeś do końca</p>
+      <p class="text-center" style="color: #009933; margin-top: revert;" *ngIf="error !== ''">
+        {{error}}</p>
       <p class="text-center" style="color: #009933; margin-top: revert;" *ngIf="messages.length == 0">
         Brak wiadomości w
         czacie. Napisz coś :)</p>

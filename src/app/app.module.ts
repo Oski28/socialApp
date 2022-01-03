@@ -45,6 +45,7 @@ import {ShowReportsComponent} from './components/show-reports/show-reports.compo
 import {ShowChatComponent} from './components/show-chat/show-chat.component';
 import { ShowChatsComponent } from './components/show-chats/show-chats.component';
 import { ShowEventComponent } from './components/show-event/show-event.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { ShowEventComponent } from './components/show-event/show-event.component
     ShowReportsComponent,
     ShowChatComponent,
     ShowChatsComponent,
-    ShowEventComponent
+    ShowEventComponent,
+    ForbiddenComponent
   ],
   imports: [
     BrowserModule,

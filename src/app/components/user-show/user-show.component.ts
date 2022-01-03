@@ -43,6 +43,8 @@ export class UserShowComponent implements OnInit {
   submittedReport = false;
   userId = null;
 
+  guard = null;
+
   constructor(private  activatedRoute: ActivatedRoute, private userService: UserService,
               private sanitizer: DomSanitizer, private tokenService: TokenStorageService,
               private formBuilder: FormBuilder, private modalService: NgbModal,
@@ -51,8 +53,13 @@ export class UserShowComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params: Params) => this.id = params.id);
-    window.scrollTo(0, 0);
+    this.activatedRoute.params.subscribe((params: Params) => {
+      // tslint:disable-next-line:triple-equals
+      if (params.id == this.tokenService.getUser().id) {
+        this.router.navigate(['profil']);
+      }
+      this.id = params.id;
+    });
     this.userService.getOne(this.id).subscribe(data => {
         this.id = data.id;
         this.username = data.username;

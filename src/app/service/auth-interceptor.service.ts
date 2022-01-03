@@ -11,6 +11,7 @@ import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {TokenStorageService} from './token-storage.service';
 import {AuthService} from './auth.service';
 import {catchError, filter, switchMap, take} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
@@ -20,7 +21,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private tokenStorageService: TokenStorageService, public authService: AuthService) {
+  constructor(private tokenStorageService: TokenStorageService, public authService: AuthService, private router: Router) {
   }
 
   private static addJwtToken(request: HttpRequest<any>, jwt: string | null) {
@@ -36,6 +37,12 @@ export class AuthInterceptorService implements HttpInterceptor {
     return next.handle(authReq).pipe(catchError(error => {
       if (error instanceof HttpErrorResponse && !authReq.url.includes('auth/signin') && error.status === 401) {
         return this.handle401Error(authReq, next);
+      }
+      if (error instanceof HttpErrorResponse && error.status === 403){
+        this.router.navigate(['forbidden']);
+      }
+      if (error instanceof HttpErrorResponse && error.status === 404){
+        this.router.navigate(['notfound']);
       }
       return throwError(error);
     }));
