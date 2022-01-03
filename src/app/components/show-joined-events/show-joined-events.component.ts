@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {EventService} from '../../service/event.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TokenStorageService} from '../../service/token-storage.service';
@@ -42,9 +42,9 @@ export class ShowJoinedEventsComponent implements AfterViewInit {
     this.eventService.getAllForAuthUserParticipate(this.column, this.direction, this.input,
       this.currentPage.toString(), this.pageSize.toString(), this.activeDate).subscribe(
       data => {
-        this.events = data['content'];
-        this.totalPages = data['totalPages']
-        this.totalElements = data['totalElements']
+        this.events = data.content;
+        this.totalPages = data.totalPages
+        this.totalElements = data.totalElements
       },
       err => {
         console.log(err);

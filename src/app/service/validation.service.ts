@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AbstractControl, FormControl, ValidatorFn} from '@angular/forms';
+import {AbstractControl, ValidatorFn} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'

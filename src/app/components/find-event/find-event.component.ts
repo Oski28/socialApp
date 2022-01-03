@@ -1,9 +1,11 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {EventService} from '../../service/event.service';
 import {RequestToJoinService} from '../../service/request-to-join.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ReportService} from '../../service/report.service';
+import {AuthService} from '../../service/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-find-event',
@@ -31,7 +33,8 @@ export class FindEventComponent implements AfterViewInit {
   userId = null;
 
   constructor(private eventService: EventService, private requestToJoinService: RequestToJoinService,
-              private modalService: NgbModal, private formBuilder: FormBuilder, private reportService: ReportService) {
+              private modalService: NgbModal, private formBuilder: FormBuilder,
+              private reportService: ReportService, private router: Router) {
   }
 
   ngAfterViewInit(): void {
@@ -50,9 +53,9 @@ export class FindEventComponent implements AfterViewInit {
     this.eventService.getAllNonParticipate(this.column, this.direction, this.input,
       this.currentPage.toString(), this.pageSize.toString(), this.activeDate).subscribe(
       data => {
-        this.events = data['content'];
-        this.totalPages = data['totalPages']
-        this.totalElements = data['totalElements']
+        this.events = data.content;
+        this.totalPages = data.totalPages
+        this.totalElements = data.totalElements
       },
       err => {
         console.log(err);
@@ -120,7 +123,7 @@ export class FindEventComponent implements AfterViewInit {
         this.correctMessage = 'Zostałeś uczestnikiem wydarzenia';
         this.errorMessage = '';
         this.getEvents();
-        // redirect to event
+        this.router.navigate(['event/'.concat(id.toString())]);
       }, err => {
         this.correctMessage = '';
         this.errorMessage = err.error.message;
@@ -134,7 +137,7 @@ export class FindEventComponent implements AfterViewInit {
         this.correctMessage = 'Wysłano prośbę o dołączenie';
         this.errorMessage = '';
         this.getEvents();
-        // redirect to my request
+        this.router.navigate(['showRequest'.concat(id.toString())]);
       }, err => {
         this.correctMessage = '';
         this.errorMessage = err.error.message;

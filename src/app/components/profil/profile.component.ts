@@ -45,7 +45,8 @@ export class ProfileComponent implements OnInit {
   userId = null;
 
   constructor(private userService: UserService, private tokenService: TokenStorageService,
-              private sanitizer: DomSanitizer, private formBuilder: FormBuilder, private authService: AuthService,
+              private sanitizer: DomSanitizer, private formBuilder: FormBuilder,
+              private authService: AuthService,
               private router: Router, private modalService: NgbModal) {
   }
 

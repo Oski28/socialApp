@@ -34,9 +34,9 @@ export class ShowEventComponent implements OnInit {
   totalElementsUsers = 0;
   pageSizeUsers = 10;
 
-  isOrganizer: boolean; // Zarządzaj, usuń
-  isParticipant = false; // napisz do organizatora, czat, opuść
-  isMod: boolean; // usuń
+  isOrganizer: boolean;
+  isParticipant = false;
+  isMod: boolean;
 
   correctMessage = '';
   errorMessage = '';

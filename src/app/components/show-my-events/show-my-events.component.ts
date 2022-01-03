@@ -38,9 +38,9 @@ export class ShowMyEventsComponent implements AfterViewInit {
     this.eventService.getAllForAuthUserCreate(this.column, this.direction, this.input,
       this.currentPage.toString(), this.pageSize.toString(), this.activeDate).subscribe(
       data => {
-        this.events = data['content'];
-        this.totalPages = data['totalPages']
-        this.totalElements = data['totalElements']
+        this.events = data.content;
+        this.totalPages = data.totalPages
+        this.totalElements = data.totalElements
       },
       err => {
         console.log(err);

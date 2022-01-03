@@ -8,7 +8,7 @@
     <div class="card-body text-center" style="background-color: lightgray; padding: 20px;" *ngIf="!notice.received">
       {{notice.content}}
       <i class="mdi mdi-calendar-remove" style="float: right;" (click)="removeNotice(notice.id);"></i>
-      <div class="form-group col-8 mx-auto" style="margin-top: 10px; margin-bottom: 0px;">
+      <div class="form-group col-8 mx-auto" style="margin-top: 10px; margin-bottom: 0;">
         <button (click)="setReceived(notice.id);" class="btn btn-info btn-block">Oznacz jako przeczytane
         </button>
       </div>

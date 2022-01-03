@@ -1,7 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../service/auth.service';
-import {ActivatedRoute} from '@angular/router';
 import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import ValidationService from '../../service/validation.service';
 import {UserService} from '../../service/user.service';

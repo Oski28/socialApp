@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router';
 import {NoticeService} from '../../service/notice.service';
-import {date} from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-show-notice',

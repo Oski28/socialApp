@@ -46,7 +46,6 @@ export class SigninComponent implements OnInit {
         );
       }
     })
-    // tslint:disable-next-line:no-shadowed-variable
     this.activatedRoute.params.subscribe((params: Params) => this.guard = params.guard);
   }
 
@@ -62,10 +61,7 @@ export class SigninComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-        this.router.navigate(['dashboard'])
-        /*.then(() => {
-        window.location.reload()
-      })*/;
+        this.router.navigate(['dashboard']);
       },
       err => {
         if (err.error.message === 'Bad credentials') {

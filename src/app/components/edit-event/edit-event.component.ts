@@ -9,7 +9,6 @@ import {CategoryService} from '../../service/category.service';
 import {RequestToJoinService} from '../../service/request-to-join.service';
 import {UserService} from '../../service/user.service';
 import {TokenStorageService} from '../../service/token-storage.service';
-import {AuthService} from '../../service/auth.service';
 
 @Component({
   selector: 'app-edit-event',

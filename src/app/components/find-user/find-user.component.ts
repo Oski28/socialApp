@@ -27,8 +27,8 @@ export class FindUserComponent implements AfterViewInit {
     this.userService.getAll(this.column, this.direction, this.input,
       this.currentPage.toString(), this.pageSize.toString()).subscribe(data => {
         this.users = data['content'];
-        this.totalPages = data['totalPages']
-        this.totalElements = data['totalElements']
+        this.totalPages = data['totalPages'];
+        this.totalElements = data['totalElements'];
         this.prepareAvatar(this.users);
       }
     )

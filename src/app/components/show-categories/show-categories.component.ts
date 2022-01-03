@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {CategoryService} from '../../service/category.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
