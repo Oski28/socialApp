@@ -76,7 +76,6 @@ export class ShowEventComponent implements OnInit {
   getEvent() {
     this.eventService.getOne(this.id).subscribe(
       data => {
-        console.log(data)
         this.name = data.name;
         this.ageLimit = data.ageLimit;
         this.maxNumber = data.maxNumberOfParticipant;

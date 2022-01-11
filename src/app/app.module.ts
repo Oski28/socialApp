@@ -46,6 +46,7 @@ import {ShowChatComponent} from './components/show-chat/show-chat.component';
 import { ShowChatsComponent } from './components/show-chats/show-chats.component';
 import { ShowEventComponent } from './components/show-event/show-event.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
     ShowChatComponent,
     ShowChatsComponent,
     ShowEventComponent,
-    ForbiddenComponent
+    ForbiddenComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

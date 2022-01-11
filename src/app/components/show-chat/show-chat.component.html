@@ -24,7 +24,7 @@
                   </button>
                 </div>
                 <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img
-                  [src]="message.file" alt="sunil"></div>
+                  [src]="message.file" height="100" alt="sunil"></div>
                 <div *ngIf="message.deleteDate !== null">Wiadomość usunięta</div>
                 <span class="time_date mb-1">{{message.writeDate}} - {{message.senderUsername}}</span>
               </blockquote>
@@ -44,7 +44,7 @@
                 </button>
               </div>
               <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img
-                [src]="message.file" alt="sunil"></div>
+                [src]="message.file" height="100" alt="sunil"></div>
               <div *ngIf="message.deleteDate !== null">Wiadomość usunięta {{message.deleteDate}}</div>
               <span class="time_date">{{message.writeDate}}</span></blockquote>
           </div>

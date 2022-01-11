@@ -34,7 +34,8 @@ export class AppComponent implements OnInit {
           }
         } else if ((event.url === '') || (event.url === '/signup') || (event.url === '/signin') ||
           (event.url.includes('/signin')) || (event.url.includes('/signup'))
-          || (event.url === '/home') || (event.url === '/about') || (event.url === '/faq')) {
+          || (event.url === '/home') || (event.url === '/about') || (event.url === '/faq') || (event.url === '/password')
+          || (event.url.includes('/password'))) {
           document.querySelector('.main-panel').classList.add('w-100');
           document.querySelector('.content-wrapper').classList.remove('auth', 'auth-img-bg',);
           document.querySelector('.content-wrapper').classList.remove('auth', 'lock-full-bg');

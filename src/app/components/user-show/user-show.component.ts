@@ -73,7 +73,10 @@ export class UserShowComponent implements OnInit {
         this.firstname = data.firstname;
         this.lastname = data.lastname;
         this.username = data.username;
-        this.email = data.email;
+        if (data.email === null) {
+          this.email = 'ukryty';
+        } else
+          this.email = data.email;
         this.dateOfBirth = data.dateOfBirth;
         this.roles = data.roles;
         this.roles.forEach(value => {

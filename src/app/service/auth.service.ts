@@ -45,4 +45,12 @@ export class AuthService {
   confirmAccount(token: string | null): Observable<any> {
     return this.http.get(AUTH_API + 'confirm-account?token=' + token, httpOptionsJson);
   }
+
+  resetPassword(username: string, email: string) {
+    return this.http.post(AUTH_API + 'passwordToken', {username, email}, httpOptionsJson);
+  }
+
+  changePassword(token: string, password: string) {
+    return this.http.post(AUTH_API + 'passwordChange', {token, password}, httpOptionsJson);
+  }
 }

@@ -117,7 +117,7 @@
                 <a routerLink="/userShow/{{user.id}}" style="color: orangered">{{user.username}}</a>
               </td>
               <td>
-                {{user.email}}
+                {{user.email ? user.email : 'ukryty'}}
               </td>
               <td>
                 {{user.dateOfBirth}}

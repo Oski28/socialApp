@@ -30,6 +30,7 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {ShowEventComponent} from './components/show-event/show-event.component';
 import {RoleGuardService} from './service/role-guard.service';
 import {ForbiddenComponent} from './components/forbidden/forbidden.component';
+import {ResetPasswordComponent} from './components/reset-password/reset-password.component';
 
 
 const routes: Routes = [
@@ -38,6 +39,8 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent},
   {path: 'forbidden', component: ForbiddenComponent},
   {path: 'faq', component: FaqComponent},
+  {path: 'password', component: ResetPasswordComponent},
+  {path: 'password/:token', component: ResetPasswordComponent},
   {path: 'signup', component: SignupComponent},
   {path: 'signup/:confirm', component: SignupComponent},
   {path: 'terms', component: TermsComponent},

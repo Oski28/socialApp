@@ -137,7 +137,7 @@ export class FindEventComponent implements AfterViewInit {
         this.correctMessage = 'Wysłano prośbę o dołączenie';
         this.errorMessage = '';
         this.getEvents();
-        this.router.navigate(['showRequest'.concat(id.toString())]);
+        this.router.navigate(['showRequest']);
       }, err => {
         this.correctMessage = '';
         this.errorMessage = err.error.message;
