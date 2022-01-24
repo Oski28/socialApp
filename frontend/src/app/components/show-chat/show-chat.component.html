@@ -1,0 +1,128 @@
+<div class="container col-lg-10">
+  <div class="mesgs col-lg-12">
+    <p>Czat: {{chat.name}}, Wydarzenie: {{chat.eventName}} <i class="mdi mdi-table-edit"
+                                                              style="float: right;"
+                                                              (click)="openModalEdit(editChatName);"></i></p>
+    <div #scroll [scrollTop]="top ? scroll.scrollHeight : 1" (scroll)="loadData(scroll)"
+         class="msg_history">
+      <p class="text-center" style="color: orangered" *ngIf="empty">Dotarłeś do końca</p>
+      <p class="text-center" style="color: #009933; margin-top: revert;" *ngIf="error !== ''">
+        {{error}}</p>
+      <p class="text-center" style="color: #009933; margin-top: revert;" *ngIf="messages.length == 0">
+        Brak wiadomości w
+        czacie. Napisz coś :)</p>
+      <div *ngFor="let message of messages">
+        <div class="incoming_msg" *ngIf="message.senderId !== userId">
+          <div class="incoming_msg_img"><img [src]="message.avatar" alt="sunil"></div>
+          <div class="received_msg">
+            <div class="received_withd_msg">
+              <blockquote class="blockquote blockquote-info">
+                <div *ngIf="message.deleteDate === null">{{message.content}}</div>
+                <div *ngIf="message.deleteDate === null  && message.fileToDownload">
+                  <button (click)="downloadFile(message.file)" class="btn btn-success btn-block" style="color: white">
+                    Załącznik
+                  </button>
+                </div>
+                <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img
+                  [src]="message.file" height="100" alt="sunil"></div>
+                <div *ngIf="message.deleteDate !== null">Wiadomość usunięta</div>
+                <span class="time_date mb-1">{{message.writeDate}} - {{message.senderUsername}}</span>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+        <div class="outgoing_msg" *ngIf="message.senderId === userId">
+          <div class="sent_msg">
+            <blockquote class="blockquote blockquote-info">
+              <div *ngIf="message.deleteDate === null"><i class="mdi mdi-calendar-remove"
+                                                          style="float: right;"
+                                                          (click)="removeMessage(message.id);"></i>{{message.content}}
+              </div>
+              <div *ngIf="message.deleteDate === null  && message.fileToDownload">
+                <button (click)="downloadFile(message.file)" class="btn btn-success btn-block" style="color: white">
+                  Załącznik
+                </button>
+              </div>
+              <div *ngIf="message.deleteDate === null  && !message.fileToDownload && message.file !== null"><img
+                [src]="message.file" height="100" alt="sunil"></div>
+              <div *ngIf="message.deleteDate !== null">Wiadomość usunięta {{message.deleteDate}}</div>
+              <span class="time_date">{{message.writeDate}}</span></blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="type_msg">
+      <div class="input_msg_write">
+        <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-group mb-0">
+           <textarea type="text" class="form-control form-control-sm" id="message" formControlName="message"
+                     name="message" [ngClass]="{ 'is-invalid': submitted && f.message.errors }"
+                     placeholder="Napisz wiadomość (max 300 znaków)" maxlength="300" minlength="1"
+                     style="min-height: 75px"></textarea>
+            <div class="invalid-feedback text-center text-white bg-info"
+                 *ngIf="f.message.errors && submitted">
+              <div *ngIf="f.message.errors.maxlength">
+                Nazwa musi mieć maksymalnie 300 znaków
+              </div>
+              <div *ngIf="f.message.errors.required">
+                Tekst wiadomości jest wymagany
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <input
+              #file
+              type="file"
+              class="form-control form-control-file form-control-lg"
+              id="file"
+              formControlName="file"
+              name="file"
+              (change)="change(file)"
+              [ngClass]="{ 'is-invalid': submitted && f.file.errors}"
+            />
+            <div class="invalid-feedback text-white text-center bg-info"
+                 *ngIf="f.file.errors && submitted">
+              <div *ngIf="f.file.errors.fileSize">Plik może mieć max 3 MB</div>
+            </div>
+          </div>
+          <button class="btn btn-dark btn-block mb-2" style="width: 75%; margin-left: auto; margin-right: auto;">
+            Wyślij wiadomość
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #editChatName let-modal class="modal fade" id="editModal" aria-labelledby="editModal">
+  <div class="modal-content bg-info">
+    <div class="modal-header">
+      <h5 class="modal-title" id="removeModalLabel">Edycja nazwy czatu </h5>
+      <button type="button" class="close" (click)="modal.dismiss();" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="pt-3" [formGroup]="formEdit" (ngSubmit)="onSubmitEdit()">
+        <label for="name">Nazwa czatu:</label>
+        <input type="text" class="form-control form-control-sm" id="name" formControlName="name"
+               name="name" [ngClass]="{ 'is-invalid': submittedEdit && fEdit.reason.errors }"
+               placeholder="Podaj nazwe" maxlength="50" minlength="3"/>
+        <div class="invalid-feedback text-center text-white bg-info" *ngIf="fEdit.name.errors && submittedEdit">
+          <div *ngIf="fEdit.name.errors.required">Nazwa jest wymagana</div>
+          <div *ngIf="fEdit.name.errors.minlength">
+            Nazwa musi mieć co najmniej 3 znaki
+          </div>
+          <div *ngIf="fEdit.name.errors.maxlength">
+            Nazwa musi mieć maksymalnie 50 znaków
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="onSubmitEdit();">
+        Zmień nazwe
+      </button>
+      <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+    </div>
+  </div>
+</ng-template>

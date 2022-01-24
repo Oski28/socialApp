@@ -1,0 +1,198 @@
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <form class="d-flex bg-dark mb-4" action="#">
+        <div class="input-group">
+          <div class="input-group-prepend bg-transparent">
+            <i class="input-group-text border-0 mdi mdi-magnify"></i>
+          </div>
+          <input type="text" class="form-control bg-transparent border-0 text-white"
+                 placeholder="Szukaj wydarzenia dla siebie" (input)="changeInput($event.target.value);">
+        </div>
+      </form>
+      <form class="form-sample">
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="pageSize">Ilość elementów</label>
+              <div class="col-lg-12">
+                <select (change)="changeSize($event.target.value)" class="form-control" id="pageSize">
+                  <option>2</option>
+                  <option selected="selected">5</option>
+                  <option>10</option>
+                  <option>20</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="column">Kolumna sortowania</label>
+              <div class="col-lg-12">
+                <select (change)="changeColumn($event.target.value)" class="form-control" id="column">
+                  <option selected="selected">Data utworzenia</option>
+                  <option>Data wydarzenia</option>
+                  <option>Limit wiekowy</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="direction">Kierunek
+                sortowania</label>
+              <div class="col-lg-12">
+                <select class="form-control" id="direction" (change)="changeDirection($event.target.value)">
+                  <option selected="selected">Rosnąco</option>
+                  <option>Malejąco</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group row">
+              <label class="col-lg-12 col-form-label" for="pageSize">Status</label>
+              <div class="col-lg-12">
+                <select (change)="changeStatus($event.target.value)" class="form-control" id="status">
+                  <option selected="selected">Aktywne</option>
+                  <option>Nieaktywne</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card" *ngFor="let event of events">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title" style="text-transform: none">{{event.name}}</h4>
+      <p class="card-description">{{event.description}}</p>
+      <ngb-tabset type="pills" class="pills-success">
+        <ngb-tab title="Główne informacje">
+          <ng-template ngbTabContent>
+            <div class="media">
+              <div class="media-body">
+                <p>Data: {{event.date.substr(0, 10)}}</p>
+                <p>Godzina: {{event.date.substr(11, 5)}}</p>
+                <p>Lokalizacja: {{event.location}}</p>
+                <p>Limit wiekowy: {{event.ageLimit ? event.ageLimit : 'Brak ograniczeń'}}</p>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Informacje dodatkowe">
+          <ng-template ngbTabContent>
+            <div class="media">
+              <div class="media-body">
+                <p>Maksymalna ilość
+                  uczestników: {{event.maxNumberOfParticipant ? event.maxNumberOfParticipant : 'Brak ograniczeń'}}</p>
+                <p>Aktualnie dołączyło: {{event.participateUsers.length}}</p>
+                <p>Organizator: {{event.organizer}}</p>
+                <p>Kategorie wydarzenia:</p>
+                <ul>
+                  <li *ngFor="let category of event.categories">{{category}}</li>
+                </ul>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Dostępne operacje">
+          <ng-template ngbTabContent>
+            <div class="media">
+              <div class="media-body">
+                <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+                  <button class="btn btn-info btn-block mb-2" *ngIf="event.freeJoin"
+                          (click)="join(event.id); openModalInfo(infoModal)">Dołącz do
+                    wydarzenia
+                  </button>
+                  <button class="btn btn-info btn-block mb-2" *ngIf="!event.freeJoin"
+                          (click)="request(event.id); openModalInfo(infoModal)">Wyślij
+                    prośbę
+                    o dołączenie
+                  </button>
+                  <a routerLink="/event/{{event.id}}">
+                    <button class="btn btn-primary btn-block mb-2">Podgląd wydarzenia
+                    </button>
+                  </a>
+                  <button type="button" (click)="openModalReport(reportModal, event.id, event.organizerId)"
+                          class="btn btn-danger btn-block">Zgłoś
+                    administracji
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
+  </div>
+  <ng-template #reportModal let-modal class="modal fade" id="reportModal" aria-labelledby="reportModal">
+    <div class="modal-content bg-danger">
+      <div class="modal-header">
+        <h5 class="modal-title" id="removeModalLabel">Zgłoszenie </h5>
+        <button type="button" class="close" (click)="modal.dismiss();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <label for="reason">Powód zgłoszenia</label>
+          <textarea type="text" class="form-control form-control-sm" id="reason" formControlName="reason"
+                    name="reason" [ngClass]="{ 'is-invalid': submitted && f.reason.errors }"
+                    placeholder="Podaj powód" maxlength="300" minlength="1" style="min-height: 150px"></textarea>
+          <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.reason.errors && submitted">
+            <div *ngIf="f.reason.errors.required">Nazwa jest wymagana</div>
+            <div *ngIf="f.reason.errors.minlength">
+              Nazwa musi mieć co najmniej 1 znak
+            </div>
+            <div *ngIf="f.reason.errors.maxlength">
+              Nazwa musi mieć maksymalnie 300 znaków
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="onSubmit(); openModalInfo(infoModal)">
+          Zgłoś
+        </button>
+        <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #infoModal let-modal class="modal fade" id="infoModal" aria-labelledby="infoModal">
+    <div class="modal-content bg-secondary">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoModalLabel">Informacja</h5>
+        <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
+          Błąd: {{errorMessage}}
+        </div>
+        <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
+          {{correctMessage}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Zamknij</button>
+      </div>
+    </div>
+  </ng-template>
+</div>
+<div class="col-lg-12 grid-margin stretch-card" *ngIf="events.length == 0">
+  <div class="card">
+    <div class="card-body text-center">
+      <h4>Brak danych do wyświetlenia</h4>
+    </div>
+  </div>
+</div>
+<div class="card-body" *ngIf="!(events.length == 0)">
+  <ngb-pagination (pageChange)="loadPage($event)" [collectionSize]="totalElements" [pageSize]="pageSize"
+                  [page]="currentPage+1" aria-label="user pagination"
+                  class="d-flex justify-content-center pagination-success"></ngb-pagination>
+</div>

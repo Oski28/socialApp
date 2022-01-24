@@ -1,0 +1,174 @@
+<div class="d-flex align-items-center auth px-0">
+  <div class="row w-100 mx-0">
+    <div class="col-lg-8 mx-auto">
+      <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+        <h4 class="font-weight-light text-center">Dodaj konto</h4>
+        <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="firstname">Imie</label>
+            <input type="text" class="form-control form-control-lg" id="firstname" formControlName="firstname"
+                   name="firstname" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }"
+                   placeholder="Podaj imie">
+            <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.firstname.errors && submitted">
+              <div *ngIf="f.firstname.errors.required">Imię jest wymagane</div>
+              <div *ngIf="f.firstname.errors.minlength">
+                Imię musi mieć co najmniej 3 znaki
+              </div>
+              <div *ngIf="f.firstname.errors.maxlength">
+                Imię musi mieć maksymalnie 50 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastname">Nazwisko</label>
+            <input type="text" class="form-control form-control-lg" id="lastname" formControlName="lastname"
+                   name="lastname" [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }"
+                   placeholder="Podaj nazwisko">
+            <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.lastname.errors && submitted">
+              <div *ngIf="f.lastname.errors.required">Nazwisko jest wymagane</div>
+              <div *ngIf="f.lastname.errors.minlength">
+                Nazwisko musi mieć co najmniej 3 znaki
+              </div>
+              <div *ngIf="f.lastname.errors.maxlength">
+                Nazwisko musi mieć maksymalnie 50 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control form-control-lg" id="email" formControlName="email"
+                   name="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" placeholder="Podaj email"/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.email.errors && submitted">
+              <div *ngIf="f.email.errors.required">Email jest wymagany</div>
+              <div *ngIf="f.email.errors.email">
+                Email musi być poprawnym adresem email
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="username">Nazwa użytkownika</label>
+            <input type="text" class="form-control form-control-lg" id="username" formControlName="username"
+                   name="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+                   placeholder="Podaj nazwe użytkownika"/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.username.errors && submitted">
+              <div *ngIf="f.username.errors.required">Nazwa użytkownika jest wymagana</div>
+              <div *ngIf="f.username.errors.minlength">
+                Nazwa użytkownika musi mieć co najmniej 3 znaki
+              </div>
+              <div *ngIf="f.username.errors.maxlength">
+                Nazwa użytkownika musi mieć maksymalnie 50 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Hasło</label>
+            <input type="password" class="form-control form-control-lg" id="password"
+                   formControlName="password"
+                   name="password"
+                   [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                   placeholder="Podaj hasło"/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.password.errors && submitted">
+              <div *ngIf="f.password.errors.required">Hasło jest wymagane</div>
+              <div *ngIf="f.password.errors.minlength">
+                Hasło musi mieć co najmniej 6 znaków
+              </div>
+              <div *ngIf="f.password.errors.pattern">
+                Hasło musi się składać z przynajmniej: 1 wielkiej litery, 1 małej litery, 1 cyfry
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Potwierdzenie hasła</label>
+            <input type="password" class="form-control form-control-lg" id="confirmPassword"
+                   formControlName="confirmPassword"
+                   name="confirmPassword"
+                   [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+                   placeholder="Potwierdź hasło"/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.confirmPassword.errors && submitted">
+              <div *ngIf="f.confirmPassword.errors.required">Potwierdzenie hasła jest wymagane</div>
+              <div *ngIf="f.confirmPassword.errors.matching">
+                Podane hasła nie zgadzają się
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfBirth">Data urodzenia</label>
+            <input type="date" class="form-control form-control-lg" id="dateOfBirth"
+                   formControlName="dateOfBirth"
+                   name="dateOfBirth"
+                   [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" required/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.dateOfBirth.errors && submitted">
+              <div *ngIf="f.dateOfBirth.errors.required">Data urodzenia jest wymagana</div>
+              <div *ngIf="f.dateOfBirth.errors.dateRange">Użytkownik powinien mieć ukończone 12 lat i nieprzekraczać 101
+                lat
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="avatar">Avatar</label>
+            <input
+              #img
+              type="file"
+              class="form-control form-control-file form-control-lg"
+              id="avatar"
+              formControlName="avatar"
+              name="avatar"
+              (change)="change(img)"
+              [ngClass]="{ 'is-invalid': submitted && f.avatar.errors }"
+            />
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.avatar.errors && submitted">
+              <div *ngIf="f.avatar.errors.image">Obraz musi mieć rozdzielczość min 200x200 a max 600x600.</div>
+              <div *ngIf="f.avatar.errors.extension">Dozowolone formaty obrazu: jpeg, png, jpg.</div>
+              <div *ngIf="f.avatar.errors.fileSize">Obraz może mieć max 15MB.</div>
+              <div *ngIf="f.avatar.errors.file">Można załączyć tylko jeden plik</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <h6>Uprawnienia</h6>
+            <div class="col-lg-12 text-center">
+              <label for="Mod"> <input type="radio" class="form-control"
+                                       formControlName="role"
+                                       name="role"
+                                       id="Mod" value="MODERATOR"/>Moderator</label>
+            </div>
+            <div class="col-lg-12 text-center">
+              <label for="Admin"> <input type="radio" class="form-control"
+                                         formControlName="role"
+                                         name="role"
+                                         id="Admin" value="ADMIN"/>Adminstrator</label>
+            </div>
+          </div>
+
+          <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+            <button class="btn btn-success btn-block mb-2">Dodaj konto</button>
+            <button
+              type="button"
+              (click)="onReset()"
+              class="btn btn-warning btn-block"
+            >
+              Zresetuj
+            </button>
+          </div>
+
+          <div class="alert alert-warning text-center" *ngIf="isCreateFailed">
+            Wystąpił błąd podczas tworzenia konta!<br/>{{ errorMessage }}
+          </div>
+
+          <div class="alert alert-success text-center" *ngIf="isSuccessful">
+            Na adres email wysłano link potwierdzający stworzenie konta. Kliknij w link aby zakończyć proces tworzenia
+            konta
+            w serwisie. Link aktywny przez 24 godziny.
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar" *ngIf="isUser">
+  <ul class="nav" *ngIf="isUser">
+    <li class="nav-item nav-profile">
+      <a href="javascript:;" class="nav-link">
+        <div class="nav-profile-image">
+          <img [src]="avatar" alt="profile">
+          <span class="login-status online"></span> <!--change to offline or busy as needed-->
+        </div>
+        <div class="nav-profile-text">
+          <span class="font-weight-bold mb-2">{{user.firstname}} {{user.lastname}}</span>
+          <span class="text-secondary text-small">{{user.email}}</span>
+        </div>
+        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+      </a>
+    </li>
+    <li class="nav-item" [ngClass]="{ 'active': dashboard.isActive }">
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive #dashboard="routerLinkActive">
+        <span class="menu-title">Strona główna</span>
+        <i class="mdi mdi-home menu-icon "></i>
+      </a>
+    </li>
+    <li class="nav-item" [ngClass]="{ 'active': findUsers.isActive }" *ngIf="isUser">
+      <a class="nav-link" routerLink="/findUser" routerLinkActive #findUsers="routerLinkActive">
+        <span class="menu-title">Szukaj użytkowników</span>
+        <i class="mdi mdi-account-search menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item" [ngClass]="{ 'active': createUser.isActive }" *ngIf="isAdmin">
+      <a class="nav-link" routerLink="/addUser" routerLinkActive #createUser="routerLinkActive">
+        <span class="menu-title">Dodaj użytkownika</span>
+        <i class="mdi mdi mdi-account-plus menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="isMod"
+        [ngClass]="{'active' : addCategory.isActive || showCategories.isActive}">
+      <a class="nav-link" (click)="categoriesCollapsed = !categoriesCollapsed"
+         [attr.aria-expanded]="categoriesCollapsed"
+         aria-controls="category">
+        <span class="menu-title">Zarządzanie kategoriami</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="category" [ngbCollapse]="!categoriesCollapsed">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"><a class="nav-link" routerLink="addCategory" routerLinkActive="active"
+                                  #addCategory="routerLinkActive">Dodaj kategorie</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="showCategories" routerLinkActive="active"
+                                  #showCategories="routerLinkActive">Przeglądaj kategorie</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item" *ngIf="isUser"
+        [ngClass]="{'active' : addEvent.isActive || findEvent.isActive || showMyEvent.isActive || showJoined.isActive || showRequest.isActive}">
+      <a class="nav-link" (click)="eventsCollapsed = !eventsCollapsed" [attr.aria-expanded]="eventsCollapsed"
+         aria-controls="event">
+        <span class="menu-title">Zarządzanie wydarzeniami</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-calendar-text"></i>
+      </a>
+      <div class="collapse" id="event" [ngbCollapse]="!eventsCollapsed">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"><a class="nav-link" routerLink="addEvent" routerLinkActive="active"
+                                  #addEvent="routerLinkActive">Dodaj wydarzenie</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="findEvent" routerLinkActive="active"
+                                  #findEvent="routerLinkActive">Szukaj wydarzenia</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="showMyEvents" routerLinkActive="active"
+                                  #showMyEvent="routerLinkActive">Moje wydarzenia</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="showJoined" routerLinkActive="active"
+                                  #showJoined="routerLinkActive">Bierzesz udział</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="showRequest" routerLinkActive="active"
+                                  #showRequest="routerLinkActive">Moje prośby o dołączenie</a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</nav>

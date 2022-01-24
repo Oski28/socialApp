@@ -1,0 +1,72 @@
+<div class="d-flex align-items-center auth px-0" *ngIf="!this.isLoggedIn">
+  <div class="row w-100 mx-0">
+    <div class="col-lg-8 mx-auto">
+      <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+        <div class="alert alert-success text-center" *ngIf="!this.isLoggedIn && confirm!==''">
+          {{confirm}}
+        </div>
+        <div class="alert alert-warning text-center" *ngIf="!this.isLoggedIn && guard!=null">
+          {{guard}}
+        </div>
+        <div class="brand-logo">
+          <img src="assets/images/logo.svg" alt="logo">
+        </div>
+        <h4>Witaj w serwisie Rivia</h4>
+        <h6 class="font-weight-light">Zaloguj się aby kontynuować</h6>
+        <form class="pt-3" name="form"
+              (ngSubmit)="f.form.valid && onSubmit()"
+              #f="ngForm"
+              novalidate>
+
+          <div class="form-group">
+            <label for="username">Nazwa użytkownika</label>
+            <input type="text" class="form-control form-control-lg" id="username" name="username"
+                   [(ngModel)]="form.username"
+                   required
+                   #username="ngModel" placeholder="Podaj nazwę użytkownika"/>
+            <div class="alert alert-danger text-center" role="alert" *ngIf="username.errors && f.submitted">
+              Nazwa użytkownika jest wymagana
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Hasło</label>
+            <input type="password" class="form-control form-control-lg" id="password"
+                   name="password"
+                   [(ngModel)]="form.password"
+                   required
+                   minlength="6"
+                   #password="ngModel" placeholder="Podaj hasło"/>
+            <div class="alert alert-danger text-center" role="alert" *ngIf="password.errors && f.submitted">
+              <div *ngIf="password.errors.required">Hasło jest wymagane</div>
+              <div *ngIf="password.errors.minlength">
+                Hasło musi zawierać co najmniej 6 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group d-grid gap-2 col-8 mx-auto">
+            <button class="btn btn-success btn-block mb-2">Zaloguj</button>
+          </div>
+
+          <div class="form-group">
+            <div
+              class="alert alert-danger text-center"
+              role="alert"
+              *ngIf="f.submitted && isLoginFailed"
+            >
+              Błąd logowania: {{ errorMessage }}
+            </div>
+          </div>
+
+          <div class="text-center mt-4 font-weight-light">
+            Nie masz konta? <a routerLink="/signup" class="text-info">Zarejestruj</a>
+          </div>
+          <div class="text-center mt-4 font-weight-light">
+            Nie pamiętasz hasła? <a routerLink="/password" class="text-info">Zresetuj</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

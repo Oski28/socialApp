@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">FAQ</h4>
+        <ngb-accordion [closeOthers]="true" activeIds="collapse-8" class="accordion-filled">
+          <ngb-panel [id]="'collapse'+i" *ngFor="let i of this.tab" title="{{i}} Question">
+            <ng-template ngbPanelContent>
+              <strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</strong> Ut neque ligula, lobortis at
+              vulputate ut, rutrum sit amet nibh. In vel lacus laoreet magna posuere commodo. Aliquam rutrum lacus at
+              est
+              tristique, non viverra ipsum efficitur. Aliquam ac vulputate dolor. Duis sed mauris et nibh congue auctor
+              ac
+              in odio. Nullam cursus dapibus risus vel porttitor. In vitae finibus sapien. Pellentesque sapien nulla,
+              semper
+              at nibh non, pretium viverra erat. Quisque congue, ipsum ac condimentum facilisis, nibh velit bibendum
+              ipsum,
+              vel porttitor velit augue eget ipsum. Vestibulum in arcu non sem feugiat vulputate fringilla vel odio.
+              Donec
+              egestas erat porttitor, scelerisque est quis, molestie diam. Vestibulum ante ipsum primis in faucibus orci
+              luctus et ultrices posuere cubilia curae; Etiam quis purus non tellus luctus tristique. Quisque sed tortor
+              velit. Donec non massa tortor.
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+    </div>
+  </div>
+</div>

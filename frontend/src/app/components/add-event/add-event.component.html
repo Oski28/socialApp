@@ -1,0 +1,182 @@
+<div class="d-flex align-items-center auth px-0">
+  <div class="row w-100 mx-0">
+    <div class="col-lg-8 mx-auto">
+      <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+        <h4 class="font-weight-light text-center">Dodaj wydarzenie</h4>
+        <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="name">Nazwa wydarzenia</label>
+            <input type="text" class="form-control form-control-lg" id="name" formControlName="name"
+                   name="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                   placeholder="Podaj nazwe">
+            <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.name.errors && submitted">
+              <div *ngIf="f.name.errors.required">Nazwa jest wymagana</div>
+              <div *ngIf="f.name.errors.minlength">
+                Nazwa musi mieć co najmniej 3 znaki
+              </div>
+              <div *ngIf="f.name.errors.maxlength">
+                Nazwa musi mieć maksymalnie 50 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Opis</label>
+            <textarea type="text" class="form-control form-control-lg" id="description" formControlName="description"
+                      name="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+                      placeholder="Podaj opis" maxlength="300" minlength="1" style="min-height: 150px"></textarea>
+            <div class="invalid-feedback text-center text-white bg-info" *ngIf="f.description.errors && submitted">
+              <div *ngIf="f.description.errors.required">Nazwisko jest wymagane</div>
+              <div *ngIf="f.description.errors.minlength">
+                Opis musi mieć co najmniej 1 znak
+              </div>
+              <div *ngIf="f.description.errors.maxlength">
+                Opis musi mieć maksymalnie 300 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ageLimit">Ograniczenie wiekowe</label>
+            <select (change)="changeAgeLimit($event.target.value)" class="form-control form-control-lg" id="ageLimit"
+                    name="ageLimit">
+              <option>Brak</option>
+              <option>12</option>
+              <option>13</option>
+              <option>14</option>
+              <option>15</option>
+              <option>16</option>
+              <option>17</option>
+              <option selected="selected">18</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="maxNumberOfParticipant">Maksymalna ilość uczestników</label>
+            <input type="number" class="form-control form-control-lg" id="maxNumberOfParticipant"
+                   formControlName="maxNumberOfParticipant"
+                   name="maxNumberOfParticipant" min="2" max="149" value="50"
+                   [ngClass]="{ 'is-invalid': submitted && f.maxNumberOfParticipant.errors }"
+                   placeholder="Podaj maksymalną ilość uczestników"/>
+            <div class="invalid-feedback text-white text-center bg-info"
+                 *ngIf="f.maxNumberOfParticipant.errors && submitted">
+              <div *ngIf="f.maxNumberOfParticipant.errors.required">
+                Ilość uczestników jest wymagana
+              </div>
+              <div *ngIf="f.maxNumberOfParticipant.errors.min">
+                Minimalna ilość uczestników to 2
+              </div>
+              <div *ngIf="f.maxNumberOfParticipant.errors.max">
+                Maksymalna ilość uczestników to 149
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Lokalizacja</label>
+            <input type="text" class="form-control form-control-lg" id="location"
+                   formControlName="location"
+                   name="location"
+                   [ngClass]="{ 'is-invalid': submitted && f.location.errors }"
+                   placeholder="Podaj lokalizacje"/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.location.errors && submitted">
+              <div *ngIf="f.location.errors.required">Lokalizacja jest wymagana</div>
+              <div *ngIf="f.location.errors.minlength">
+                Lokalizacja musi mieć co najmniej 1 znak
+              </div>
+              <div *ngIf="f.location.errors.maxlength">
+                Lokalizacja musi mieć maksymalnie 200 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Data wydarzenia</label>
+            <input type="datetime-local" class="form-control form-control-lg" id="date"
+                   formControlName="date"
+                   name="date"
+                   [ngClass]="{ 'is-invalid': submitted && f.date.errors }" required/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.date.errors && submitted">
+              <div *ngIf="f.date.errors.required">Data jest wymagana</div>
+              <div *ngIf="f.date.errors.future">Data powinna być przyszłą datą
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label mb-0">Wolny dostęp</label>
+            <div class="form-check form-check-info">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" formControlName="freeJoin"
+                       name="freeJoin" id="freeJoin1" value="true">
+                Tak
+                <i class="input-helper"></i>
+              </label>
+            </div>
+            <div class="form-check form-check-info">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" formControlName="freeJoin"
+                       name="freeJoin" id="freeJoin2"
+                       value="false">
+                Nie
+                <i class="input-helper"></i>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="chatName">Nazwa czatu</label>
+            <input type="text" class="form-control form-control-lg" id="chatName"
+                   formControlName="chatName"
+                   name="chatName"
+                   [ngClass]="{ 'is-invalid': submitted && f.chatName.errors }"
+                   placeholder="Podaj nazwę czatu"/>
+            <div class="invalid-feedback text-white text-center bg-info" *ngIf="f.chatName.errors && submitted">
+              <div *ngIf="f.chatName.errors.required">Nazwa czatu jest wymagana</div>
+              <div *ngIf="f.chatName.errors.minlength">
+                Nazwa czatu musi mieć co najmniej 3 znaki
+              </div>
+              <div *ngIf="f.chatName.errors.maxlength">
+                Nazwa czatu musi mieć maksymalnie 50 znaków
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label mb-0">Kategorie</label>
+            <div class="form-check form-check-info" *ngFor="let category of categoriesData">
+              <label class="form-check-label">
+                <input (change)="changeCheckbox($event)"
+                       type="checkbox" class="form-check-input" name="category{{category.id}}"
+                       id="category{{category.id}}" value="{{category.name}}">
+                {{category.name}}
+                <i class="input-helper"></i>
+              </label>
+            </div>
+          </div>
+
+
+          <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+            <button class="btn btn-success btn-block mb-2">Dodaj wydarzenie</button>
+            <button
+              type="button"
+              (click)="onReset()"
+              class="btn btn-warning btn-block"
+            >
+              Zresetuj
+            </button>
+          </div>
+
+          <div class="alert alert-warning text-center" *ngIf="isCreateFailed">
+            Wystąpił błąd podczas tworzenia wydarzenia!<br/>{{ errorMessage }}
+          </div>
+
+          <div class="alert alert-success text-center" *ngIf="isSuccessful">
+            Wydarzenie zostało dodane
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

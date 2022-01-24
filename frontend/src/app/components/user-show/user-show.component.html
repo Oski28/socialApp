@@ -1,0 +1,199 @@
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-danger text-center" *ngIf="blocked">
+          Użytkownik został zbanowany. Koniec bana: {{banDate.substr(0, 10)}} {{banDate.substr(11)}}
+        </div>
+        <h4 class="card-title">Profil użytkownika</h4>
+        <div class="d-flex">
+          <div class="d-flex align-items-center mr-4 text-muted font-weight-light">
+            <i class="mdi mdi-account-outline icon-sm mr-2"></i>
+            <span>{{firstname}} {{lastname}}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-lg-6 pr-1 mb-1">
+            <img [src]="avatar" class="mb-2 mw-100 w-100 rounded" alt="image"
+                 style="width:100% !important;  max-height:400px !important; max-width:400px !important;">
+          </div>
+          <div class="col-lg-6 pr-1">
+            <div class="card">
+              <div class="card-body" style="padding: 0;">
+                <h4 class="card-title">Dane użytkownika</h4>
+                <table class="table mb-0">
+                  <tbody>
+                  <tr>
+                    <td class="pl-0">Imie</td>
+                    <td class="text-right">
+                      {{firstname}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Nazwisko</td>
+                    <td class="text-right">
+                      {{lastname}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Email</td>
+                    <td class="text-right">
+                      {{email}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Nazwa użytkownika</td>
+                    <td class="text-right">
+                      {{username}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Data urodzenia</td>
+                    <td class="text-right">
+                      {{dateOfBirth}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">W serwisie od</td>
+                    <td class="text-right">
+                      {{addDate.substr(0, 10)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-0">Uprawnienia</td>
+                    <td class="text-left">
+                      <li *ngFor="let role of roles">{{role.role.substr(5)}}</li>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="!isUserAdmin && isAuthAdmin">
+          <form class="pt-3" [formGroup]="formRole" (ngSubmit)="onSubmitRole()">
+            <div class="form-group">
+              <h5>Edytuj uprawnienia</h5>
+              <div class="row">
+                <div class="col-lg-4">
+                  <label for="User"> <input type="radio" class="form-control"
+                                            formControlName="role"
+                                            name="role"
+                                            id="User" value="USER"/>Użytkownik</label>
+                </div>
+                <div class="col-lg-4">
+                  <label for="Mod"> <input type="radio" class="form-control"
+                                           formControlName="role"
+                                           name="role"
+                                           id="Mod" value="MODERATOR"/>Moderator</label>
+                </div>
+                <div class="col-lg-4">
+                  <label for="Admin"> <input type="radio" class="form-control"
+                                             formControlName="role"
+                                             name="role"
+                                             id="Admin" value="ADMIN"/>Adminstrator</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group d-grid gap-2 col-8 mx-auto mt-3 p-2">
+              <button class="btn btn-success btn-block mb-2">Zmień uprawnienia</button>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="!blocked && !isUserMod">
+          <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="banExpirationDate">Czasowe zawieszenie konta użytkownika</label>
+              <input type="date" class="form-control form-control-lg"
+                     formControlName="banExpirationDate"
+                     name="banExpirationDate"
+                     id="banExpirationDate"
+                     [ngClass]="{ 'is-invalid': submitted && f.banExpirationDate.errors }" required/>
+              <div class="invalid-feedback text-white text-center bg-info"
+                   *ngIf="f.banExpirationDate.errors && submitted">
+                <div *ngIf="f.banExpirationDate.errors.required">Data jest wymagana</div>
+                <div *ngIf="f.banExpirationDate.errors.dateRange">Data powinna być przyszłą datą przed 2100 rokiem.
+                </div>
+              </div>
+            </div>
+            <div class="form-group d-grid gap-2 col-8 mx-auto mt-3 p-2">
+              <button class="btn btn-success btn-block mb-2">Zbanuj</button>
+            </div>
+          </form>
+        </div>
+        <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
+          <button *ngIf="blocked && !isUserMod"
+                  type="button"
+                  (click)="unban()"
+                  class="btn btn-warning btn-block"
+          >
+            Zakończ bana
+          </button>
+          <button type="button" (click)="createChatIfNotExist()"
+                  class="btn btn-info btn-block">Napisz wiadomość
+          </button>
+          <button type="button" (click)="openModalReport(reportModal, id);"
+                  class="btn btn-danger btn-block">Zgłoś
+            administracji
+          </button>
+        </div>
+      </div>
+    </div>
+    <ng-template #reportModal let-modal class="modal fade" id="reportModal" aria-labelledby="reportModal">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeModalLabel">Zgłoszenie </h5>
+          <button type="button" class="close" (click)="modal.dismiss();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="pt-3" [formGroup]="formReport" (ngSubmit)="onSubmitReport()">
+            <label for="reason">Powód zgłoszenia</label>
+            <textarea type="text" class="form-control form-control-sm" id="reason" formControlName="reason"
+                      name="reason" [ngClass]="{ 'is-invalid': submittedReport && fReport.reason.errors }"
+                      placeholder="Podaj powód" maxlength="300" minlength="1" style="min-height: 150px"></textarea>
+            <div class="invalid-feedback text-center text-white bg-info"
+                 *ngIf="fReport.reason.errors && submittedReport">
+              <div *ngIf="fReport.reason.errors.required">Nazwa jest wymagana</div>
+              <div *ngIf="fReport.reason.errors.minlength">
+                Nazwa musi mieć co najmniej 1 znak
+              </div>
+              <div *ngIf="fReport.reason.errors.maxlength">
+                Nazwa musi mieć maksymalnie 100 znaków
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="onSubmitReport(); openModalInfo(infoModal)">
+            Zgłoś
+          </button>
+          <button type="button" class="btn btn-light" (click)="modal.close()">Anuluj</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #infoModal let-modal class="modal fade" id="infoModal" aria-labelledby="infoModal">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">Informacja</h5>
+          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger text-center" *ngIf="errorMessage !== ''">
+            Błąd: {{errorMessage}}
+          </div>
+          <div class="alert alert-success text-center" *ngIf="correctMessage !== ''">
+            {{correctMessage}}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="modal.close()">Zamknij</button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Czaty</h4>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>
+             Nazwa
+            </th>
+            <th>
+              Ostatnia wiadomość
+            </th>
+            <th>
+
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let chat of chats">
+            <td class="py-1">
+              {{chat.name}}
+            </td>
+            <td>
+              {{chat.lastMessage}}
+            </td>
+            <td>
+              <a routerLink="/chat/{{chat.id}}" style="color: orangered">Przejdź do czatu</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-body text-center" *ngIf="chats.length == 0">
+      <h4>Brak danych do wyświetlenia</h4>
+    </div>
+    <div class="card-body" *ngIf="!(chats.length == 0)">
+      <ngb-pagination (pageChange)="loadPage($event)" [collectionSize]="totalElements" [pageSize]="pageSize"
+                      [page]="currentPage+1" aria-label="user pagination"
+                      class="d-flex justify-content-center pagination-success"></ngb-pagination>
+    </div>
+  </div>
+</div>
