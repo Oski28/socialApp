@@ -1,6 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {UserService} from '../../service/user.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-find-user',
@@ -20,7 +21,7 @@ export class FindUserComponent implements AfterViewInit {
   column = 'id';
   direction = 'ASC';
 
-  constructor(private userService: UserService, private sanitizer: DomSanitizer) {
+  constructor(private userService: UserService, private fileService: FileService) {
   }
 
   getUsers() {
@@ -41,13 +42,7 @@ export class FindUserComponent implements AfterViewInit {
 
   private prepareAvatar(users: any[]) {
     users.forEach(user => {
-      if (user.avatar !== null) {
-        user.avatar = this.sanitizer
-          .bypassSecurityTrustResourceUrl('' + user.avatar.substr(0, user.avatar.indexOf(',') + 1)
-            + user.avatar.substr(user.avatar.indexOf(',') + 1));
-      } else {
-        user.avatar = 'assets\\images\\usericon.png';
-      }
+      user.avatar = this.fileService.preparePhoto(user.avatar);
     })
   }
 

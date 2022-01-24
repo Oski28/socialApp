@@ -3,10 +3,11 @@ import {NgbDropdownConfig} from '@ng-bootstrap/ng-bootstrap';
 import {TokenStorageService} from '../../service/token-storage.service';
 import {AuthService} from '../../service/auth.service';
 import {NavigationEnd, Router} from '@angular/router';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {SafeResourceUrl} from '@angular/platform-browser';
 import {UserService} from '../../service/user.service';
 import {NoticeService} from '../../service/notice.service';
 import {ReportService} from '../../service/report.service';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-navbar',
@@ -26,8 +27,9 @@ export class NavbarComponent implements AfterViewInit {
   reports: any[];
 
   constructor(config: NgbDropdownConfig, private tokenService: TokenStorageService,
-              private authService: AuthService, private router: Router, private sanitizer: DomSanitizer,
-              private userService: UserService, private noticeService: NoticeService, private reportService: ReportService) {
+              private authService: AuthService, private router: Router, private fileService: FileService,
+              private userService: UserService, private noticeService: NoticeService,
+              private reportService: ReportService) {
     config.placement = 'bottom-right';
   }
 
@@ -42,13 +44,7 @@ export class NavbarComponent implements AfterViewInit {
           this.isMod = this.tokenService.isMod();
           this.userService.getAvatar(this.tokenService.getUser().id).subscribe(
             data => {
-              if (data.avatar !== null) {
-                this.avatar = this.sanitizer
-                  .bypassSecurityTrustResourceUrl('' + data.avatar.substr(0, data.avatar.indexOf(',') + 1)
-                    + data.avatar.substr(data.avatar.indexOf(',') + 1));
-              } else {
-                this.avatar = 'assets\\images\\usericon.png';
-              }
+              this.avatar = this.fileService.preparePhoto(data.avatar);
             }
           )
           this.noticeService.getAllNotReceived().subscribe(

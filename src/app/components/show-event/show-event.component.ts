@@ -9,6 +9,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RequestToJoinService} from '../../service/request-to-join.service';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ReportService} from '../../service/report.service';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-show-event',
@@ -53,7 +54,7 @@ export class ShowEventComponent implements OnInit {
   divorceId = null;
 
   constructor(private  activatedRoute: ActivatedRoute, private eventService: EventService,
-              private sanitizer: DomSanitizer, private userService: UserService,
+              private fileService: FileService, private userService: UserService,
               private chatService: ChatService, private router: Router,
               private tokenService: TokenStorageService, private modalService: NgbModal,
               private requestToJoinService: RequestToJoinService,
@@ -110,13 +111,7 @@ export class ShowEventComponent implements OnInit {
 
   private prepareAvatar(users: any[]) {
     users.forEach(user => {
-      if (user.avatar !== null) {
-        user.avatar = this.sanitizer
-          .bypassSecurityTrustResourceUrl('' + user.avatar.substr(0, user.avatar.indexOf(',') + 1)
-            + user.avatar.substr(user.avatar.indexOf(',') + 1));
-      } else {
-        user.avatar = 'assets\\images\\usericon.png';
-      }
+      user.avatar = this.fileService.preparePhoto(user.avatar);
     })
   }
 

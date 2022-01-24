@@ -9,6 +9,7 @@ import {CategoryService} from '../../service/category.service';
 import {RequestToJoinService} from '../../service/request-to-join.service';
 import {UserService} from '../../service/user.service';
 import {TokenStorageService} from '../../service/token-storage.service';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-edit-event',
@@ -61,7 +62,7 @@ export class EditEventComponent implements OnInit {
   pageSizeRequest = 10;
 
   constructor(private  activatedRoute: ActivatedRoute, private eventService: EventService,
-              private modalService: NgbModal, private sanitizer: DomSanitizer, private formBuilder: FormBuilder,
+              private modalService: NgbModal, private fileService: FileService, private formBuilder: FormBuilder,
               private categoryService: CategoryService, private requestToJoinService: RequestToJoinService,
               private userService: UserService, private tokenService: TokenStorageService,
               private router: Router) {
@@ -168,13 +169,7 @@ export class EditEventComponent implements OnInit {
 
   private prepareAvatar(users: any[]) {
     users.forEach(user => {
-      if (user.avatar !== null) {
-        user.avatar = this.sanitizer
-          .bypassSecurityTrustResourceUrl('' + user.avatar.substr(0, user.avatar.indexOf(',') + 1)
-            + user.avatar.substr(user.avatar.indexOf(',') + 1));
-      } else {
-        user.avatar = 'assets\\images\\usericon.png';
-      }
+      user.avatar = this.fileService.preparePhoto(user.avatar);
     })
   }
 

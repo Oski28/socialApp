@@ -10,6 +10,7 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/form
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {saveAs} from 'file-saver';
 import {RxwebValidators} from '@rxweb/reactive-form-validators';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-show-chat',
@@ -42,7 +43,7 @@ export class ShowChatComponent implements OnInit, OnDestroy {
   private unsubscribeSubject: Subject<void> = new Subject<void>();
 
   constructor(private  activatedRoute: ActivatedRoute, private messageService: MessageService,
-              private sanitizer: DomSanitizer, private chatService: ChatService,
+              private fileService: FileService, private chatService: ChatService,
               private tokenService: TokenStorageService, private formBuilder: FormBuilder,
               private modalService: NgbModal) {
   }
@@ -131,13 +132,7 @@ export class ShowChatComponent implements OnInit, OnDestroy {
 
   private prepareAvatar(users: any[]) {
     users.forEach(user => {
-      if (user.avatar !== null) {
-        user.avatar = this.sanitizer
-          .bypassSecurityTrustResourceUrl('' + user.avatar.substr(0, user.avatar.indexOf(',') + 1)
-            + user.avatar.substr(user.avatar.indexOf(',') + 1));
-      } else {
-        user.avatar = 'assets\\images\\usericon.png';
-      }
+      user.avatar = this.fileService.preparePhoto(user.avatar);
     })
   }
 
@@ -223,9 +218,7 @@ export class ShowChatComponent implements OnInit, OnDestroy {
   private prepareFile(messages: any[]) {
     messages.forEach(message => {
       if (!message.fileToDownload && message.file !== null) {
-        message.file = this.sanitizer
-          .bypassSecurityTrustResourceUrl('' + message.file.substr(0, message.file.indexOf(',') + 1)
-            + message.file.substr(message.file.indexOf(',') + 1));
+        message.file = this.fileService.prepareFile(message.file);
       }
     })
   }

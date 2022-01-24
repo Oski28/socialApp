@@ -12,7 +12,8 @@ export class ShowNoticeComponent implements OnInit {
   id: number = null;
   content: string = null;
 
-  constructor(private  activatedRoute: ActivatedRoute, private noticeService: NoticeService, private router: Router) {
+  constructor(private  activatedRoute: ActivatedRoute, private noticeService: NoticeService,
+              private router: Router) {
   }
 
   ngOnInit(): void {

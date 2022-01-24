@@ -8,6 +8,7 @@ import ValidationService from '../../service/validation.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportService} from '../../service/report.service';
 import {ChatService} from '../../service/chat.service';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-user-show',
@@ -46,7 +47,7 @@ export class UserShowComponent implements OnInit {
   guard = null;
 
   constructor(private  activatedRoute: ActivatedRoute, private userService: UserService,
-              private sanitizer: DomSanitizer, private tokenService: TokenStorageService,
+              private fileService: FileService, private tokenService: TokenStorageService,
               private formBuilder: FormBuilder, private modalService: NgbModal,
               private reportService: ReportService, private chatService: ChatService,
               private router: Router) {
@@ -63,13 +64,7 @@ export class UserShowComponent implements OnInit {
     this.userService.getOne(this.id).subscribe(data => {
         this.id = data.id;
         this.username = data.username;
-        if (data.avatar !== null) {
-          this.avatar = this.sanitizer
-            .bypassSecurityTrustResourceUrl('' + data.avatar.substr(0, data.avatar.indexOf(',') + 1)
-              + data.avatar.substr(data.avatar.indexOf(',') + 1));
-        } else {
-          this.avatar = 'assets\\images\\usericon.png';
-        }
+        this.avatar = this.fileService.preparePhoto(data.avatar);
         this.firstname = data.firstname;
         this.lastname = data.lastname;
         this.username = data.username;

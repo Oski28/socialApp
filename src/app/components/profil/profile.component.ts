@@ -8,6 +8,7 @@ import ValidationService from '../../service/validation.service';
 import {AuthService} from '../../service/auth.service';
 import {Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-profil',
@@ -45,7 +46,7 @@ export class ProfileComponent implements OnInit {
   userId = null;
 
   constructor(private userService: UserService, private tokenService: TokenStorageService,
-              private sanitizer: DomSanitizer, private formBuilder: FormBuilder,
+              private fileService: FileService, private formBuilder: FormBuilder,
               private authService: AuthService,
               private router: Router, private modalService: NgbModal) {
   }
@@ -54,13 +55,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getOne(this.tokenService.getUser().id).subscribe(data => {
         this.id = data.id;
         this.username = data.username;
-        if (data.avatar !== null) {
-          this.avatar = this.sanitizer
-            .bypassSecurityTrustResourceUrl('' + data.avatar.substr(0, data.avatar.indexOf(',') + 1)
-              + data.avatar.substr(data.avatar.indexOf(',') + 1));
-        } else {
-          this.avatar = 'assets\\images\\usericon.png';
-        }
+        this.avatar = this.fileService.preparePhoto(data.avatar);
         this.firstname = data.firstname;
         this.lastname = data.lastname;
         this.username = data.username;

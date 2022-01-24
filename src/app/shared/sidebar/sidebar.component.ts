@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {TokenStorageService} from '../../service/token-storage.service';
 import {NavigationEnd, Router} from '@angular/router';
-import {AuthService} from '../../service/auth.service';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {SafeResourceUrl} from '@angular/platform-browser';
 import {UserService} from '../../service/user.service';
+import {FileService} from '../../service/file-service';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,7 +21,7 @@ export class SidebarComponent implements AfterViewInit {
   avatar: SafeResourceUrl;
 
   constructor(private tokenService: TokenStorageService, private router: Router,
-              private sanitizer: DomSanitizer, private userService: UserService) {
+              private fileService: FileService, private userService: UserService) {
   }
 
   ngAfterViewInit() {
@@ -36,13 +36,7 @@ export class SidebarComponent implements AfterViewInit {
         this.isAdmin = this.tokenService.isAdmin();
         this.userService.getAvatar(this.tokenService.getUser().id).subscribe(
           data => {
-            if (data.avatar !== null) {
-              this.avatar = this.sanitizer
-                .bypassSecurityTrustResourceUrl('' + data.avatar.substr(0, data.avatar.indexOf(',') + 1)
-                  + data.avatar.substr(data.avatar.indexOf(',') + 1));
-            } else {
-              this.avatar = 'assets\\images\\usericon.png';
-            }
+            this.avatar = this.fileService.preparePhoto(data.avatar);
           }
         )
       }
