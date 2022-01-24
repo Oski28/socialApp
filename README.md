@@ -17,7 +17,8 @@ The target group for the application is unlimited, anyone looking for people wil
 
 ## General info
 Project Use Cases Diagrams
-![Main Use Cases Diagram]()
+![Main_ang](https://user-images.githubusercontent.com/62342040/150821658-07a75408-67b3-46e7-ae31-7d0c108002d8.PNG)
+
 
 ## Screenshots
 ![Example screenshot](./img/screenshot.png)
