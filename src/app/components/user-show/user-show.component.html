@@ -5,6 +5,9 @@
         <div class="alert alert-danger text-center" *ngIf="blocked">
           Użytkownik został zbanowany. Koniec bana: {{banDate.substr(0, 10)}} {{banDate.substr(11)}}
         </div>
+        <div class="alert alert-danger text-center" *ngIf="!enabled">
+          Konto użytkownika nieaktywne.
+        </div>
         <h4 class="card-title">Profil użytkownika</h4>
         <div class="d-flex">
           <div class="d-flex align-items-center mr-4 text-muted font-weight-light">
@@ -71,7 +74,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="!isUserAdmin && isAuthAdmin">
+        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="enabled && !isUserAdmin && isAuthAdmin">
           <form class="pt-3" [formGroup]="formRole" (ngSubmit)="onSubmitRole()">
             <div class="form-group">
               <h5>Edytuj uprawnienia</h5>
@@ -101,7 +104,7 @@
             </div>
           </form>
         </div>
-        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="!blocked && !isUserMod">
+        <div class="col-lg-6 pr-1 bg-gradient-info" style="margin: 0 auto;" *ngIf="enabled && !blocked && isAuthMod && !isUserMod">
           <form class="pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-group">
               <label for="banExpirationDate">Czasowe zawieszenie konta użytkownika</label>
@@ -123,17 +126,17 @@
           </form>
         </div>
         <div class="form-group d-grid gap-2 col-8 mx-auto mt-3">
-          <button *ngIf="blocked && !isUserMod"
+          <button *ngIf="enabled && blocked && !isUserMod"
                   type="button"
                   (click)="unban()"
                   class="btn btn-warning btn-block"
           >
             Zakończ bana
           </button>
-          <button type="button" (click)="createChatIfNotExist()"
+          <button *ngIf="enabled" type="button" (click)="createChatIfNotExist()"
                   class="btn btn-info btn-block">Napisz wiadomość
           </button>
-          <button type="button" (click)="openModalReport(reportModal, id);"
+          <button *ngIf="enabled" type="button" (click)="openModalReport(reportModal, id);"
                   class="btn btn-danger btn-block">Zgłoś
             administracji
           </button>

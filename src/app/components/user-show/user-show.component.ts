@@ -27,6 +27,7 @@ export class UserShowComponent implements OnInit {
   roles: [];
   addDate = '';
   blocked: boolean;
+  enabled: boolean;
   banDate: string;
 
   isAuthMod: boolean;
@@ -83,6 +84,7 @@ export class UserShowComponent implements OnInit {
             this.isUserAdmin = true;
         })
         this.blocked = data.blocked;
+        this.enabled = data.enabled;
         this.addDate = data.addDate;
         this.banDate = data.banExpirationDate;
         this.isAuthMod = this.tokenService.isMod();
