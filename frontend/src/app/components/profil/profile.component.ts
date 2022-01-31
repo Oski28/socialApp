@@ -190,7 +190,7 @@ export class ProfileComponent implements OnInit {
     return this.formPassword.controls;
   }
 
-  logout(): void {
+  logout(message = 'Zmieniono dane logowania. Wymagane ponowne zalogowanie do serwisu'): void {
     let userId: number;
     let token: string | null;
     userId = this.tokenService.getUser().id;
@@ -201,13 +201,13 @@ export class ProfileComponent implements OnInit {
       });
 
     this.tokenService.signOut();
-    this.guard = 'Zmieniono dane logowania. Wymagane ponowne zalogowanie do serwisu';
+    this.guard = message;
     this.router.navigate(['signin', this.guard]);
   }
 
   removeAccount() {
     this.userService.removeUser(this.tokenService.getUser().id).subscribe();
-    this.logout();
+    this.logout('Usunięto konto. Aby je odzyskać skorzystaj z linku wysłanego na adres email.');
   }
 
   openModal(removeModalContent) {

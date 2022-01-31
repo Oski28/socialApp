@@ -24,7 +24,7 @@ public interface UserService {
 
     boolean banUser(Long id, LocalDate banDate);
 
-    boolean enableUser(Long id);
+    void enableUser(Long id);
 
     void unbanIfBanDateExpired();
 

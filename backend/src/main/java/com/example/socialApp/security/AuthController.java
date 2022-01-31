@@ -179,11 +179,8 @@ public class AuthController {
     public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String token) {
         RegisterToken registerToken = registerTokenService.findByToken(token);
         if (registerToken != null) {
-            if (userService.enableUser(registerToken.getUser().getId())) {
-                return ResponseEntity.ok(new MessageResponse("Twoje konto zostało odblokowane."));
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            userService.enableUser(registerToken.getUser().getId());
+            return ResponseEntity.ok(new MessageResponse("Twoje konto zostało odblokowane."));
         } else {
             throw new NullPointerException("Niepoprawny token. Podaj poprawny token aby odblokować konto lub ponownie zarejestruj się w serwisie.");
         }

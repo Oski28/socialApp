@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 public interface BaseService<E extends BaseEntity> {
 
@@ -20,7 +22,7 @@ public interface BaseService<E extends BaseEntity> {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     E save(E entity);
 
-    E getById(Long id);
+    Optional<E> findById(Long id);
 
-    boolean isExists(Long id);
+    E getById(Long id);
 }

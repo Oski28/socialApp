@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -47,16 +48,17 @@ public class NoticeServiceImplementation implements NoticeService, BaseService<N
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean delete(Long id) {
-        if (isExists(id)) {
+        Optional<Notice> optionalNotice = findById(id);
+        if (optionalNotice.isPresent()){
             User user = this.userService.getAuthUser();
-            Notice notice = getById(id);
+            Notice notice = optionalNotice.get();
 
             if (!notice.getUser().equals(user)) {
                 throw new OperationAccessDeniedException("Brak dostępu do usuwania powiadomienia o id " + id);
             }
-            this.noticeRepository.deleteById(id);
+            this.noticeRepository.delete(optionalNotice.get());
             return true;
-        } else {
+        } else{
             return false;
         }
     }
@@ -68,17 +70,14 @@ public class NoticeServiceImplementation implements NoticeService, BaseService<N
 
     @Override
     @Transactional(readOnly = true)
-    public Notice getById(Long id) {
-        if (isExists(id)) {
-            return this.noticeRepository.getById(id);
-        } else {
-            return null;
-        }
+    public Optional<Notice> findById(Long id) {
+        return this.noticeRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
-        return this.noticeRepository.existsById(id);
+    @Transactional(readOnly = true)
+    public Notice getById(Long id) {
+        return this.noticeRepository.getById(id);
     }
 
 

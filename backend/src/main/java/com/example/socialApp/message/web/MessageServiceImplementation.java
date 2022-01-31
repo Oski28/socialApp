@@ -27,6 +27,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.DatatypeConverter;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -99,9 +100,10 @@ public class MessageServiceImplementation implements MessageService, BaseService
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean delete(Long id) {
-        if (isExists(id)) {
+        Optional<Message> optionalMessage = findById(id);
+        if (optionalMessage.isPresent()) {
             User user = this.userService.getAuthUser();
-            Message message = getById(id);
+            Message message = optionalMessage.get();
 
             if (!message.getUser().equals(user)) {
                 throw new OperationAccessDeniedException("Brak uprawnień do usunięcia wiadomości");
@@ -119,10 +121,23 @@ public class MessageServiceImplementation implements MessageService, BaseService
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Message> findById(Long id) {
+        return this.messageRepository.findById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Message getById(Long id) {
+        return this.messageRepository.getById(id);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public Message save(Message entity, Long id, Long userId) {
-        if (chatService.isExists(id)) {
-            Chat chat = chatService.getById(id);
+        Optional<Chat> optionalChat = this.chatService.findById(id);
+        if (optionalChat.isPresent()) {
+            Chat chat = optionalChat.get();
             User user = userService.getAuthUser();
             if (user == null) {
                 user = userService.getById(userId);
@@ -156,20 +171,5 @@ public class MessageServiceImplementation implements MessageService, BaseService
         dto.setFileData(DatatypeConverter.parseBase64Binary(message
                 .getFile().substring(message.getFile().indexOf(",") + 1)));
         return dto;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Message getById(Long id) {
-        if (isExists(id)) {
-            return this.messageRepository.getById(id);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public boolean isExists(Long id) {
-        return this.messageRepository.existsById(id);
     }
 }

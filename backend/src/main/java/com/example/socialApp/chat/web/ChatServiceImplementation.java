@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,8 +58,9 @@ public class ChatServiceImplementation implements ChatService, BaseService<Chat>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean update(Long id, Chat entity) {
-        if (isExists(id)) {
-            Chat chat = getById(id);
+        Optional<Chat> optionalChat = findById(id);
+        if (optionalChat.isPresent()) {
+            Chat chat = optionalChat.get();
             chat.setName(entity.getName());
             return true;
         } else return false;
@@ -67,8 +69,9 @@ public class ChatServiceImplementation implements ChatService, BaseService<Chat>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean delete(Long id) {
-        if (isExists(id)) {
-            this.chatRepository.deleteById(id);
+        Optional<Chat> optionalChat = findById(id);
+        if (optionalChat.isPresent()) {
+            this.chatRepository.delete(optionalChat.get());
             return true;
         }
         return false;
@@ -81,18 +84,14 @@ public class ChatServiceImplementation implements ChatService, BaseService<Chat>
 
     @Override
     @Transactional(readOnly = true)
-    public Chat getById(Long id) {
-        if (isExists(id)) {
-            return this.chatRepository.getById(id);
-        } else {
-            return null;
-        }
-
+    public Optional<Chat> findById(Long id) {
+        return this.chatRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
-        return chatRepository.existsById(id);
+    @Transactional(readOnly = true)
+    public Chat getById(Long id) {
+        return this.chatRepository.getById(id);
     }
 
     @Override
@@ -117,7 +116,13 @@ public class ChatServiceImplementation implements ChatService, BaseService<Chat>
     public void removeUserForAllChats(User user) {
         List<Chat> chats = this.chatRepository.findAll();
         for (Chat chat : chats) {
-            user.getChats().remove(chat);
+            if (chat.getUsers().size() == 2 && chat.getUsers().contains(user)) {
+                for (User chatUser : chat.getUsers()) {
+                    chatUser.getChats().remove(chat);
+                }
+                delete(chat.getId());
+            } else
+                user.getChats().remove(chat);
         }
     }
 

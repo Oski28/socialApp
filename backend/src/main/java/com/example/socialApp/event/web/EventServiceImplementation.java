@@ -25,10 +25,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,9 +90,11 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean update(Long id, Event entity) {
-        if (isExists(id)) {
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
             User user = this.userService.getAuthUser();
-            Event event = getById(id);
+
 
             if (!(event.getUser().equals(user) ||
                     user.getRoles().contains(this.roleService.findByRole(ERole.ROLE_MODERATOR)))) {
@@ -130,10 +129,10 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean delete(Long id) {
-
-        if (isExists(id)) {
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
             User user = this.userService.getAuthUser();
-            Event event = getById(id);
 
             if (!(event.getUser().equals(user) ||
                     user.getRoles().contains(this.roleService.findByRole(ERole.ROLE_MODERATOR)))) {
@@ -164,17 +163,14 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
 
     @Override
     @Transactional(readOnly = true)
-    public Event getById(Long id) {
-        if (isExists(id)) {
-            return this.eventRepository.getById(id);
-        } else {
-            return null;
-        }
+    public Optional<Event> findById(Long id) {
+        return this.eventRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
-        return this.eventRepository.existsById(id);
+    @Transactional(readOnly = true)
+    public Event getById(Long id) {
+        return this.eventRepository.getById(id);
     }
 
     @Override
@@ -298,24 +294,23 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public void addUserToEventParticipation(Long id, User user) {
-        if (isExists(id)) {
-            Event event = getById(id);
-            if (event.getUsers() == null) {
-                event.setUsers(Set.of(user));
-            } else {
-                this.noticeService.addNoticeToUsers(this.noticeService.create("Użytkownik " + user.getUsername() + " dołączył do Twojego wydarzenia " + event.getName() + "."), Set.of(event.getUser()));
-                event.getUsers().add(user);
-            }
-            this.userService.addChatToUser(user.getId(), event.getChat());
+        Event event = getById(id);
+        if (event.getUsers() == null) {
+            event.setUsers(Set.of(user));
+        } else {
+            this.noticeService.addNoticeToUsers(this.noticeService.create("Użytkownik " + user.getUsername() + " dołączył do Twojego wydarzenia " + event.getName() + "."), Set.of(event.getUser()));
+            event.getUsers().add(user);
         }
+        this.userService.addChatToUser(user.getId(), event.getChat());
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean updateDate(Long id, Event event) {
-        if (isExists(id)) {
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event eventById = optionalEvent.get();
             User user = this.userService.getAuthUser();
-            Event eventById = getById(id);
 
             if (!(eventById.getUser().equals(user) ||
                     user.getRoles().contains(this.roleService.findByRole(ERole.ROLE_MODERATOR)))) {
@@ -323,8 +318,8 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
             }
 
             this.noticeService.addNoticeToUsers(
-                    this.noticeService.create("Zaktualizowano date wydarzenia " + eventById.getName() + " w którym bierzesz udział."),
-                    eventById.getUsers());
+                    this.noticeService.create("Zaktualizowano date wydarzenia " + eventById.getName()
+                            + " w którym bierzesz udział."), eventById.getUsers());
 
             eventById.setDate(event.getDate());
             return true;
@@ -335,9 +330,10 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean updateNumber(Long id, Event event) {
-        if (isExists(id)) {
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event eventById = optionalEvent.get();
             User user = this.userService.getAuthUser();
-            Event eventById = getById(id);
 
             if (!(eventById.getUser().equals(user) ||
                     user.getRoles().contains(this.roleService.findByRole(ERole.ROLE_MODERATOR)))) {
@@ -358,9 +354,10 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean updateCategories(Long id, Event event) {
-        if (isExists(id)) {
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event eventById = optionalEvent.get();
             User user = this.userService.getAuthUser();
-            Event eventById = getById(id);
 
             if (!(eventById.getUser().equals(user) ||
                     user.getRoles().contains(this.roleService.findByRole(ERole.ROLE_MODERATOR)))) {
@@ -391,10 +388,10 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean joinUserToEvent(Long id) {
-        User user = this.userService.getAuthUser();
-
-        if (isExists(id)) {
-            Event event = getById(id);
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
+            User user = this.userService.getAuthUser();
             if (checkPossibilityOfJoining(event)) {
                 if (checkAge(user, event)) {
                     event.getUsers().add(user);
@@ -417,10 +414,10 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean divorceUserFromEvent(Long id) {
-        User user = this.userService.getAuthUser();
-
-        if (isExists(id)) {
-            Event event = getById(id);
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
+            User user = this.userService.getAuthUser();
             if (event.getUser().equals(user)) {
                 throw new OperationAccessDeniedException("Organizator wydarzenia nie może go opuścić.");
             } else {
@@ -436,16 +433,14 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean removeUserFromEvent(Long id, Long userId) {
-        User user = this.userService.getAuthUser();
-
-        if (isExists(id)) {
-            Event event = getById(id);
+        Optional<Event> optionalEvent = findById(id);
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
+            User user = this.userService.getAuthUser();
             if (user.getId().equals(userId)) {
                 throw new OperationAccessDeniedException("Organizator wydarzenia nie może go opuścić.");
             }
-            if (!event.getUser().equals(user)) {
-                throw new OperationAccessDeniedException("Tylko organizator może usunąć uczestnika z wydarzenia");
-            } else {
+            if (event.getUser().equals(user)) {
                 User removeUser = this.userService.getById(userId);
                 event.getUsers().remove(removeUser);
                 this.userService.removeChatFromUser(userId, event.getChat());
@@ -453,6 +448,8 @@ public class EventServiceImplementation implements EventService, BaseService<Eve
                 this.noticeService.addNoticeToUsers(this.noticeService.create("Organizator wydarzenia " + event.getName() + " usunął Cię z listy uczestników"), Set.of(removeUser));
 
                 return true;
+            } else {
+                throw new OperationAccessDeniedException("Tylko organizator może usunąć uczestnika z wydarzenia");
             }
         } else return false;
     }

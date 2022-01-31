@@ -208,7 +208,6 @@ public class UserController extends BaseController<User> {
     @PatchMapping("/{id}/ban")
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Void> banUser(@PathVariable final Long id, @RequestBody @Valid final BanRequest banRequest) {
-        System.out.println(banRequest.getBanExpirationDate());
         if (this.userService.banUser(id, banRequest.getBanExpirationDate())) {
 
             SimpleMailMessage mailMessage = new SimpleMailMessage();

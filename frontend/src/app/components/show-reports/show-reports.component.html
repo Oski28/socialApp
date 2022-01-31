@@ -6,14 +6,14 @@
       <p>Data: {{report.addDate}}</p>
       <p>Powód: {{report.reason}}</p>
       <p><a routerLink="/userShow/{{report.userId}}" style="color: orangered">Zgłoszony użytkownik</a></p>
-      <p><a routerLink="/event/{{report.eventId}}" style="color: orangered">Zgłoszone wydarzenie</a></p>
+      <p *ngIf="report.eventId !== null"><a routerLink="/event/{{report.eventId}}" style="color: orangered">Zgłoszone wydarzenie</a></p>
     </div>
     <div class="card-body text-center" style="background-color: lightgray; padding: 20px;" *ngIf="!report.received">
       <i class="mdi mdi-calendar-remove" style="float: right;" (click)="removeReport(report.id);"></i>
       <p>Data: {{report.addDate}}</p>
       <p>Powód: {{report.reason}}</p>
       <p><a routerLink="/userShow/{{report.userId}}" style="color: orangered">Zgłoszony użytkownik</a></p>
-      <p><a routerLink="/event/{{report.eventId}}" style="color: orangered">Zgłoszone wydarzenie</a></p>
+      <p *ngIf="report.eventId !== null"><a routerLink="/event/{{report.eventId}}" style="color: orangered">Zgłoszone wydarzenie</a></p>
       <div class="form-group col-8 mx-auto" style="margin-top: 10px; margin-bottom: 0;">
         <button (click)="setReceived(report.id);" class="btn btn-info btn-block">Oznacz jako przeczytane
         </button>

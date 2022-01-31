@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -30,26 +31,24 @@ public abstract class BaseController<E extends BaseEntity> {
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, readOnly = true)
     public <T> ResponseEntity<T> getOne(final Long id, Function<E, T> converter) {
-        E entity = this.service.getById(id);
-        if (entity != null)
-            return ResponseEntity.ok(converter.apply(entity));
-        else
-            return ResponseEntity.notFound().build();
+        Optional<E> entity = this.service.findById(id);
+        return entity.map(e -> ResponseEntity.ok(converter.apply(e)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public <T> ResponseEntity<Void> create(final E entity) {
+    public ResponseEntity<Void> create(final E entity) {
         E saved = this.service.save(entity);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(saved.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    public <T> ResponseEntity<Void> update(final Long id, final E entity)  {
+    public ResponseEntity<Void> update(final Long id, final E entity) {
         return this.service.update(id, entity) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<?> delete(final Long id) {
-        if (this.service.isExists(id)) {
+        if (this.service.findById(id).isPresent()) {
             this.service.delete(id);
             return ResponseEntity.ok().build();
         }

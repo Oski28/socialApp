@@ -62,6 +62,7 @@ public class UserShowWithoutEmailConverter extends BaseConverter<User, UserShowD
             dto.setBlocked(user.getBlocked());
             dto.setAddDate(user.getAddDate());
             dto.setBanExpirationDate(user.getBanExpirationDate());
+            dto.setEnabled(user.getEnabled());
 
             return dto;
         };

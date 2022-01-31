@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImplementation implements CategoryService, BaseService<Category> {
@@ -42,8 +43,9 @@ public class CategoryServiceImplementation implements CategoryService, BaseServi
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean update(Long id, Category entity) {
-        if (isExists(id)) {
-            Category category = getById(id);
+        Optional<Category> optionalCategory = findById(id);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
             category.setName(entity.getName());
             return true;
         } else {
@@ -54,8 +56,9 @@ public class CategoryServiceImplementation implements CategoryService, BaseServi
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean delete(Long id) {
-        if (isExists(id)) {
-            Category category = getById(id);
+        Optional<Category> optionalCategory = findById(id);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
             this.eventService.removeCategoryForAllEvents(category);
             this.categoryRepository.delete(category);
             return true;
@@ -71,17 +74,14 @@ public class CategoryServiceImplementation implements CategoryService, BaseServi
 
     @Override
     @Transactional(readOnly = true)
-    public Category getById(Long id) {
-        if (isExists(id)) {
-            return this.categoryRepository.getById(id);
-        } else {
-            return null;
-        }
+    public Optional<Category> findById(Long id) {
+        return this.categoryRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
-        return this.categoryRepository.existsById(id);
+    @Transactional(readOnly = true)
+    public Category getById(Long id) {
+        return this.categoryRepository.getById(id);
     }
 
     @Override

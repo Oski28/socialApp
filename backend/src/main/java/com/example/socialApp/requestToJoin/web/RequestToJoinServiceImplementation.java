@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -135,8 +136,9 @@ public class RequestToJoinServiceImplementation implements RequestToJoinService,
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean resend(Long id) {
-        if (isExists(id)) {
-            RequestToJoin requestToJoin = getById(id);
+        Optional<RequestToJoin> optional = findById(id);
+        if (optional.isPresent()) {
+            RequestToJoin requestToJoin = optional.get();
             requestToJoin.setStatus(Status.WAITING);
             requestToJoin.setAddDate(LocalDateTime.now());
             this.noticeService.addNoticeToUsers(this.noticeService.create("Wysłano prośbę o dołączenie do Twojego wydarzenia " + requestToJoin.getEvent().getName() + "."), Set.of(requestToJoin.getEvent().getUser()));
@@ -156,9 +158,10 @@ public class RequestToJoinServiceImplementation implements RequestToJoinService,
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean update(Long id, RequestToJoin entity) {
-        if (isExists(id)) {
+        Optional<RequestToJoin> optional = findById(id);
+        if (optional.isPresent()) {
+            RequestToJoin requestToJoin = optional.get();
             User user = this.userService.getAuthUser();
-            RequestToJoin requestToJoin = getById(id);
             Event event = this.eventService.getById(requestToJoin.getEvent().getId());
 
             if (!event.getUser().equals(user)) {
@@ -194,8 +197,9 @@ public class RequestToJoinServiceImplementation implements RequestToJoinService,
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean delete(Long id) {
-        if (isExists(id)) {
-            this.requestToJoinRepository.deleteById(id);
+        Optional<RequestToJoin> optional = findById(id);
+        if (optional.isPresent()) {
+            this.requestToJoinRepository.delete(optional.get());
             return true;
         } else {
             return false;
@@ -209,16 +213,13 @@ public class RequestToJoinServiceImplementation implements RequestToJoinService,
 
     @Override
     @Transactional(readOnly = true)
-    public RequestToJoin getById(Long id) {
-        if (isExists(id)) {
-            return this.requestToJoinRepository.getById(id);
-        } else {
-            return null;
-        }
+    public Optional<RequestToJoin> findById(Long id) {
+        return this.requestToJoinRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
-        return this.requestToJoinRepository.existsById(id);
+    @Transactional(readOnly = true)
+    public RequestToJoin getById(Long id) {
+        return this.requestToJoinRepository.getById(id);
     }
 }

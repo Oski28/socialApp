@@ -21,6 +21,7 @@ public class UserShowDto {
     private LocalDate dateOfBirth;
     private LocalDateTime addDate;
     private Boolean blocked;
+    private Boolean enabled;
     private LocalDateTime banExpirationDate;
     private Set<RoleShowDto> roles;
     private Set<ChatNameDto> chats;

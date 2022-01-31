@@ -31,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -114,11 +116,15 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean banUser(Long id, LocalDate banDate) {
-        if (isExists(id)) {
-            User user = getById(id);
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             if (user.getRoles().contains(this.roleService.findByRole(ERole.ROLE_MODERATOR)) ||
                     user.getRoles().contains(this.roleService.findByRole(ERole.ROLE_ADMIN))) {
                 throw new OperationAccessDeniedException("Nie można zbanować użytkownika o uprawnieniach moderatora.");
+            }
+            if (!user.getEnabled()) {
+                throw new OperationAccessDeniedException("Nie można zbanować nieaktywnego użytkownika");
             } else {
                 user.setBlocked(true);
                 user.setBanExpirationDate(LocalDateTime.of(banDate, LocalTime.MIDNIGHT));
@@ -130,14 +136,10 @@ public class UserServiceImplementation implements UserService, BaseService<User>
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
-    public boolean enableUser(Long id) {
-        if (isExists(id)) {
-            User user = getById(id);
-            user.setEnabled(true);
-            user.setDeleteDate(null);
-            return true;
-        }
-        return false;
+    public void enableUser(Long id) {
+        User user = getById(id);
+        user.setEnabled(true);
+        user.setDeleteDate(null);
     }
 
     @Override
@@ -153,10 +155,7 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(readOnly = true)
     public Page<User> getAllForEvent(int page, int size, String column, Sort.Direction sortDir, Long eventId) {
-        Event event = this.eventService.getById(eventId);
-        if (event == null) {
-            throw new NullPointerException("Brak takiego wydarzenia");
-        }
+        Event event = this.eventService.findById(eventId).orElseThrow(() -> new NoSuchElementException("Brak takiego wydarzenia"));
         Sort sort = Sort.by(new Sort.Order(sortDir, column));
         return this.userRepository.findAllByUserParticipatedEventsContains(event, PageRequest.of(page, size, sort));
     }
@@ -198,8 +197,12 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean unbanUser(Long id) {
-        if (isExists(id)) {
-            User user = getById(id);
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (!user.getEnabled()) {
+                throw new OperationAccessDeniedException("Nie można odblokować nieaktywnego użytkownika");
+            }
             user.setBlocked(false);
             user.setBanExpirationDate(null);
             return true;
@@ -210,10 +213,11 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean updatePassword(Long id, UserPasswordDto dto) {
-        if (isExists(id)) {
-            User userById = getById(id);
-            if (encoder.matches(dto.getOldPassword(), userById.getPassword())) {
-                userById.setPassword(encoder.encode(dto.getNewPassword()));
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (encoder.matches(dto.getOldPassword(), user.getPassword())) {
+                user.setPassword(encoder.encode(dto.getNewPassword()));
             } else throw new OldPasswordMismatchException("Podane aktualne hasło nie jest poprawne");
             return true;
         }
@@ -223,9 +227,10 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean updateAvatar(Long id, String avatar) {
-        if (isExists(id)) {
-            User userById = getById(id);
-            userById.setAvatar(avatar);
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setAvatar(avatar);
             return true;
         }
         return false;
@@ -234,9 +239,10 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean updateRoles(Long id, User userRole) {
-        if (isExists(id)) {
-            User userById = getById(id);
-            userById.setRoles(userRole.getRoles());
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setRoles(userRole.getRoles());
             return true;
         }
         return false;
@@ -252,8 +258,9 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean update(Long id, User entity) {
-        if (isExists(id)) {
-            User user = getById(id);
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
 
             user.setDateOfBirth(entity.getDateOfBirth());
             user.setEmail(entity.getEmail());
@@ -268,8 +275,9 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public boolean delete(Long id) {
-        if (isExists(id)) {
-            User user = getById(id);
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             user.setDeleteDate(LocalDateTime.now());
             user.setEnabled(false);
             this.noticeService.removeNoticeForDeletedUser(user);
@@ -288,13 +296,14 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     }
 
     @Override
-    public User getById(Long id) {
-        return this.userRepository.getById(id);
+    public Optional<User> findById(Long id) {
+        return this.userRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
-        return userRepository.existsById(id);
+    @Transactional(readOnly = true)
+    public User getById(Long id) {
+        return userRepository.getById(id);
     }
 
     @Override
@@ -308,13 +317,11 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public void addChatToUser(Long id, Chat chat) {
-        if (isExists(id)) {
-            User user = getById(id);
-            if (user.getChats() == null) {
-                user.setChats(Set.of(chat));
-            } else {
-                user.getChats().add(chat);
-            }
+        User user = getById(id);
+        if (user.getChats() == null) {
+            user.setChats(Set.of(chat));
+        } else {
+            user.getChats().add(chat);
         }
     }
 
@@ -326,10 +333,8 @@ public class UserServiceImplementation implements UserService, BaseService<User>
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
     public void removeChatFromUser(Long id, Chat chat) {
-        if (isExists(id)) {
-            User user = getById(id);
-            user.getChats().remove(chat);
-        }
+        User user = getById(id);
+        user.getChats().remove(chat);
     }
 
     @Override
