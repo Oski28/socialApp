@@ -5,15 +5,16 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest
+  HttpRequest, HttpResponse, HttpXsrfTokenExtractor
 } from '@angular/common/http';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {TokenStorageService} from './token-storage.service';
 import {AuthService} from './auth.service';
-import {catchError, filter, switchMap, take} from 'rxjs/operators';
+import {catchError, filter, switchMap, take, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
 const TOKEN_HEADER_KEY = 'Authorization';
+const CSRF_HEADER_KEY = 'X-XSRF-TOKEN';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -21,11 +22,16 @@ export class AuthInterceptorService implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private tokenStorageService: TokenStorageService, public authService: AuthService, private router: Router) {
+  constructor(private tokenStorageService: TokenStorageService, public authService: AuthService,
+              private router: Router, private csrfTokenExtractor: HttpXsrfTokenExtractor) {
   }
 
   private static addJwtToken(request: HttpRequest<any>, jwt: string | null) {
-    return request.clone({headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + jwt)});
+    return request.clone({headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + jwt), withCredentials: true});
+  }
+
+  private static addCsrfToken(request: HttpRequest<any>, csrf: string | null) {
+    return request.clone({headers: request.headers.set(CSRF_HEADER_KEY, csrf)});
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -34,18 +40,24 @@ export class AuthInterceptorService implements HttpInterceptor {
     if (jwt != null) {
       authReq = AuthInterceptorService.addJwtToken(req, jwt);
     }
+    const csrf = this.csrfTokenExtractor.getToken() as string;
+    if (authReq.method === 'POST' && csrf != null) {
+      authReq = AuthInterceptorService.addCsrfToken(authReq, csrf);
+    }
+
     return next.handle(authReq).pipe(catchError(error => {
-      if (error instanceof HttpErrorResponse && !authReq.url.includes('auth/signin') && error.status === 401) {
-        return this.handle401Error(authReq, next);
-      }
-      if (error instanceof HttpErrorResponse && error.status === 403){
-        this.router.navigate(['forbidden']);
-      }
-      if (error instanceof HttpErrorResponse && error.status === 404){
-        this.router.navigate(['notfound']);
-      }
-      return throwError(error);
-    }));
+        if (error instanceof HttpErrorResponse && !authReq.url.includes('auth/signin') && error.status === 401) {
+          return this.handle401Error(authReq, next);
+        }
+        if (error instanceof HttpErrorResponse && error.status === 403) {
+          this.router.navigate(['forbidden']);
+        }
+        if (error instanceof HttpErrorResponse && error.status === 404) {
+          this.router.navigate(['notfound']);
+        }
+        return throwError(error);
+      }),
+    );
   }
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler) {

@@ -28,7 +28,6 @@ import java.time.LocalTime;
 
 @RestController
 @RequestMapping(path = "/api/users")
-@CrossOrigin
 public class UserController extends BaseController<User> {
 
     private final UserServiceImplementation userService;

@@ -26,7 +26,6 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(path = "/api/requestToJoin")
-@CrossOrigin
 public class RequestToJoinController extends BaseController<RequestToJoin> {
 
     private final RequestToJoinServiceImplementation requestToJoinService;

@@ -15,7 +15,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SpinnerComponent} from './shared/spinner/spinner.component';
 import {ContentAnimateDirective} from './shared/directives/content-animate.directive';
 import {HomeComponent} from './components/home/home.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
 import {DatePipe} from '@angular/common';
 import {AuthInterceptorService} from './service/auth-interceptor.service';
 import {RxReactiveFormsModule} from '@rxweb/reactive-form-validators';
@@ -43,10 +43,10 @@ import {ShowNoticesComponent} from './components/show-notices/show-notices.compo
 import {ShowReportComponent} from './components/show-report/show-report.component';
 import {ShowReportsComponent} from './components/show-reports/show-reports.component';
 import {ShowChatComponent} from './components/show-chat/show-chat.component';
-import { ShowChatsComponent } from './components/show-chats/show-chats.component';
-import { ShowEventComponent } from './components/show-event/show-event.component';
-import { ForbiddenComponent } from './components/forbidden/forbidden.component';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import {ShowChatsComponent} from './components/show-chats/show-chats.component';
+import {ShowEventComponent} from './components/show-event/show-event.component';
+import {ForbiddenComponent} from './components/forbidden/forbidden.component';
+import {ResetPasswordComponent} from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +97,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     HttpClientModule,
     RxReactiveFormsModule,
     NgxPaginationModule,
+    HttpClientXsrfModule.withOptions({cookieName: 'XSRF-TOKEN',headerName: 'X-CSRF-TOKEN'})
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}, DatePipe, ThemeService],
   bootstrap: [AppComponent]

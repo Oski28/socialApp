@@ -18,7 +18,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/api/reports", produces = "application/json")
-@CrossOrigin
 public class ReportController extends BaseController<Report> {
 
     private final ReportServiceImplementation reportService;

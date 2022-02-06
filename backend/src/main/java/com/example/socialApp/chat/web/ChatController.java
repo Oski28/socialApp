@@ -24,7 +24,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/api/chats")
-@CrossOrigin
 public class ChatController extends BaseController<Chat> {
 
     private final ChatServiceImplementation chatService;

@@ -25,7 +25,6 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/api/events")
-@CrossOrigin
 public class EventController extends BaseController<Event> {
 
     private final EventServiceImplementation eventService;

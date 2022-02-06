@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/messages")
-@CrossOrigin
 public class MessageRestController extends BaseController<Message> {
 
     private final MessageServiceImplementation messageService;

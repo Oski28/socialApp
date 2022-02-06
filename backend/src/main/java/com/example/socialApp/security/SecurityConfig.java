@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 
 @Configuration
@@ -23,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final String[] urls = {
+    private final String[] URLS = {
             "/api/users/**",
             "/api/categories/**",
             "/api/chats/**",
@@ -32,6 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/messages/**",
             "/api/reports/**",
             "/api/requestToJoin/**"
+    };
+
+    private final String[] CSRF_IGNORE = {
+            "/api/auth/signin/**", "/api/auth/signup", "/api/auth/confirm-account/**"
     };
 
     private UserDetailsServiceImplementation userDetailsService;
@@ -71,12 +76,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.cors().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .ignoringAntMatchers(CSRF_IGNORE)
+                .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
-                .antMatchers(urls).authenticated();
+                .antMatchers(URLS).authenticated();
 
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

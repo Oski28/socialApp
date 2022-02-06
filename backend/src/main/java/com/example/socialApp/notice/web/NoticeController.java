@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/notices")
-@CrossOrigin
 public class NoticeController extends BaseController<Notice> {
 
     private final NoticeServiceImplementation noticeService;

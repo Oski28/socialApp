@@ -64,6 +64,7 @@ export class SigninComponent implements OnInit {
         this.router.navigate(['dashboard']);
       },
       err => {
+        console.log(err)
         if (err.error.message === 'Bad credentials') {
           this.errorMessage = 'Niepoprawne dane uwierzytelniające';
         } else if (err.error.message === 'User is disabled') {
