@@ -54,5 +54,5 @@ public class Message extends BaseEntity {
     @ToString.Exclude
     private User user;
 
-
+    
 }
