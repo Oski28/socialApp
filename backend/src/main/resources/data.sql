@@ -162,4 +162,4 @@ INSERT INTO message(content,write_date,chat_id,sender_id,file_name) VALUE
 ("Mess17",CURRENT_TIMESTAMP(),"1","1",null),("Mess18",CURRENT_TIMESTAMP(),"1","10",null),
 ("Mess19",CURRENT_TIMESTAMP(),"1","4",null),("Mess20",CURRENT_TIMESTAMP(),"1","1",null),
 ("Cześć, kto ma piłkę?",CURRENT_TIMESTAMP(),"1","1",null),("Ja, tylko potrzeba pompkę :/?",CURRENT_TIMESTAMP(),"1","10",null),
-("Ja wezmę pompkę :)",CURRENT_TIMESTAMP(),"1","4",null),("Git! :D",CURRENT_TIMESTAMP(),"1","1",null);
+("Ja wezmę pompkę :)",CURRENT_TIMESTAMP(),"1","4",null);
